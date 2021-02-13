@@ -30,8 +30,13 @@ async def sendNewPhoto(message: types.Message, state: FSMContext, newPhoto, from
           f"{items}"
     if fromShow:
         await message.delete()
+        card: Card = data['card']
+        if card.isInCard(mainSet[0][0]):
+            markup = changePhotoMarkup(card.items[mainSet[0][0]].quantity)
+        else:
+            markup = changePhotoMarkup()
         await dp.bot.send_photo(message.chat.id, photo=mainSet[0][5], caption=txt,
-                                reply_markup=changePhotoMarkup(), parse_mode='HTML')
+                                reply_markup=markup, parse_mode='HTML')
     else:
         card: Card = data['card']
         if card.isInCard(mainSet[0][0]):

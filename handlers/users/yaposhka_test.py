@@ -23,15 +23,22 @@ async def openSettingsMenu(message: types.Message):
 async def showProductsPhoto(message: types.Message, state: FSMContext):
     tableName = await getTableName(message.text)
     await Yap.showPhotos.set()
-    await state.set_data(
-        {
-            'current': 1,
-            'table': tableName,
-            'card': Card(),
-            'productType': message.text,
-            'order': 'asc'
-        }
-    )
+    data = await state.get_data()
+    if data.__len__() == 0:
+        data = \
+            {
+                'current': 1,
+                'table': tableName,
+                'card': Card(),
+                'productType': message.text,
+                'order': 'asc'
+            }
+    else:
+        data['current'] = 1,
+        data['table'] = tableName
+        data['productType'] = message.text
+
+    await state.set_data(data)
     await sendNewPhoto(message, state, 1, True)
 
 

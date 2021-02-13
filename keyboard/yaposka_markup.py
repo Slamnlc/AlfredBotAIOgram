@@ -17,8 +17,8 @@ def changePhotoMarkup(quantity=0):
     else:
         markup.add(InlineKeyboardButton(text=f'Добавлено {replaceNumberToEmoji(quantity)}',
                                         callback_data=ph_callback.new(do='None')))
-        markup.add(InlineKeyboardButton(text='➕', callback_data=ph_callback.new(do='addQuantity')))
-        markup.insert(InlineKeyboardButton(text='➖️', callback_data=ph_callback.new(do='minus')))
+        markup.add(InlineKeyboardButton(text='➖ кол-во', callback_data=ph_callback.new(do='minus')))
+        markup.insert(InlineKeyboardButton(text='➕ кол-во', callback_data=ph_callback.new(do='addQuantity')))
 
     markup.add(InlineKeyboardButton(text='Список блюд', callback_data=ph_callback.new(do='showAll')))
     markup.insert(InlineKeyboardButton(text='К категориям ⬅', callback_data=ph_callback.new(do='menuBack')))
