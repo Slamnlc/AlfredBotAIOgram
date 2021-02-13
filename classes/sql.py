@@ -1,5 +1,7 @@
 import json
 import psycopg2
+
+from data.config import yaposhkaDbName, mainDbName, dbUserName, dbPassword
 from service.functions.currency_function import getIndicatedCurrency
 
 
@@ -8,16 +10,16 @@ def crete_connection():
 
 
 def create_yaposhka():
-    return Database('yaposhka')
+    return Database(yaposhkaDbName)
 
 
 class Database:
 
-    def __init__(self, dbName='alfredBot'):
+    def __init__(self, dbName=mainDbName):
         self.connection = psycopg2.connect(
             database=dbName,
-            user='postgres',
-            password='26302630Bb',
+            user=dbUserName,
+            password=dbPassword,
             host='127.0.0.1',
             port='5432')
         self.cursor = self.connection.cursor()
