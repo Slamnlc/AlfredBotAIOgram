@@ -1,3 +1,3 @@
-from .config import EMOJI_DICT, TOKEN, IMAGE_PATH, RATE_PATH
+from .config import TOKEN, IMAGE_PATH
 
-__all__ = ["EMOJI_DICT", "TOKEN", "IMAGE_PATH", "RATE_PATH"]
+__all__ = ["TOKEN", "IMAGE_PATH"]

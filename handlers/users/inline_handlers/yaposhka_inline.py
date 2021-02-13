@@ -21,7 +21,7 @@ async def sendNewPhoto(message: types.Message, state: FSMContext, newPhoto, from
     if data['table'] == 'sety':
         items = '🍣' + '\n🍣'.join(mainSet[0][3][0])
     elif type(mainSet[0][3][0]) == str:
-        items = mainSet[0][3][0]
+        items = mainSet[0][3][0].title()
     else:
         items = '\n'.join(addYapEmoji(mainSet[0][3][0]))
     txt = f"{data['productType']}: <b>{name}</b>\n" \

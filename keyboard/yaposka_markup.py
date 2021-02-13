@@ -53,21 +53,20 @@ def pizzaMenu():
 
 
 def allItemsMenu(itemsList: list, quantity: str):
-    markup = InlineKeyboardMarkup(row_width=3)
-    KeyboardButton()
-    markup.add(InlineKeyboardButton(text='Назад ⬅', callback_data=ph_callback.new(do='menuBack')))
-    markup.add(InlineKeyboardButton(text='Сортировать по', callback_data=ph_callback.new(do='sort')))
-    markup.add(InlineKeyboardButton(text='Цене', callback_data=ph_callback.new(do='sortPrice')))
-    markup.insert(InlineKeyboardButton(text='Названию', callback_data=ph_callback.new(do='sortName')))
-    markup.insert(InlineKeyboardButton(text='Весу', callback_data=ph_callback.new(do='sortWeight')))
+    markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
+    markup.add(KeyboardButton('Назад ⬅'))
+    markup.add(KeyboardButton('Сортировать по'))
+    markup.add(KeyboardButton('🔤'))
+    markup.insert(KeyboardButton('💲'))
+    markup.insert(KeyboardButton('⚖️'))
+
     if quantity != '':
-        markup.insert(
-            InlineKeyboardButton(text='Количеству', callback_data=ph_callback.new(do='sortQuantity')))
+        markup.insert(KeyboardButton('🍣🔢'))
 
     for item in itemsList:
         if quantity != '':
-            text = f"{item[0]} | {item[1]} | {item[4]} шт. | {item[2]} грн."
+            text = f"{(item[0].title())} | {item[1]} | {item[4]} шт. | {item[2]} грн."
         else:
-            text = f"{item[0]} | {item[1]} | {item[2]} грн."
-        markup.add((InlineKeyboardButton(text=text, callback_data=ph_callback.new(do=item[3]))))
+            text = f"{item[0].title()} | {item[1]} | {item[2]} грн."
+        markup.add(KeyboardButton(text=text))
     return markup

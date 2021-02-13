@@ -11,7 +11,7 @@ def crete_connection():
 
 def create_yaposhka():
     return Database(yaposhkaDbName)
-1==1
+
 
 class Database:
 
@@ -58,8 +58,12 @@ class Database:
         self.cursor.execute(f"UPDATE {tableName} SET {what} = {how} WHERE {condition}")
         self.connection.commit()
 
-    def isExist(self, field, table, condition):
-        self.cursor.execute(f"SELECT EXISTS(SELECT {field} FROM {table} WHERE {field} = {condition})")
+    def isExist(self, field, table, condition, like=False):
+        if like:
+            eq = "LIKE"
+        else:
+            eq = "="
+        self.cursor.execute(f"SELECT EXISTS(SELECT {field} FROM {table} WHERE {field} {eq} {condition})")
         result = self.cursor.fetchall()[0]
         return result[0]
 
@@ -72,7 +76,7 @@ class Database:
         else:
             return False
 
-    def createTable(self, tableName:str, header: str):
+    def createTable(self, tableName: str, header: str):
         self.cursor.execute(f"CREATE TABLE {tableName} ({header})")
         self.connection.commit()
         print(f"Table {tableName} was successfully created")
@@ -104,7 +108,7 @@ class Database:
         print(f"User with id {userID} was deleted")
 
     def addUser(self, idUser, currency='UAH',
-                mainCurrency=['EUR', 'USD'], location='NULL', currencyPriority=None, dayForShow=10):
+                mainCurrency=('EUR', 'USD'), location='NULL', currencyPriority=None, dayForShow=10):
         if currencyPriority is None:
             currencyPriority = getIndicatedCurrency()
         currencyPriority = json.dumps(currencyPriority)
