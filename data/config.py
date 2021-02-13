@@ -4,6 +4,6 @@ ADMINS = [185200431]
 
 mainDbName = 'alfredBot'
 yaposhkaDbName = 'yaposhka'
-
+1==1
 dbUserName = 'postgres'
 dbPassword = '26302630Bb'
