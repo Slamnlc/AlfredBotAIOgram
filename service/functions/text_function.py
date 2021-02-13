@@ -40,7 +40,7 @@ def replaceList(strToReplace, oldText, newText):
 def replaceNumberToEmoji(txt):
     oldText = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     newText = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣']
-    return replaceList(txt, oldText, newText)
+    return replaceList(str(txt), oldText, newText)
 
 
 def addSymbolToString(st, word, symbols):

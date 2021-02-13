@@ -1,7 +1,7 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
-from filters import IsNumber
+from classes.Card import Card
 from keyboard.inline.callback_data import ph_callback
 from keyboard.yaposka_markup import mainYapMarkup, allItemsMenu, changePhotoMarkup
 from loader import dp, yap_db
@@ -33,8 +33,13 @@ async def sendNewPhoto(message: types.Message, state: FSMContext, newPhoto, from
         await dp.bot.send_photo(message.chat.id, photo=mainSet[0][5], caption=txt,
                                 reply_markup=changePhotoMarkup(), parse_mode='HTML')
     else:
+        card: Card = data['card']
+        if card.isInCard(mainSet[0][0]):
+            markup = changePhotoMarkup(card.items[mainSet[0][0]].quantity)
+        else:
+            markup = changePhotoMarkup()
         await message.edit_media(types.input_media.InputMediaPhoto(mainSet[0][5]))
-        await message.edit_caption(caption=txt, reply_markup=message.reply_markup, parse_mode='HTML')
+        await message.edit_caption(caption=txt, reply_markup=markup, parse_mode='HTML')
     await state.set_data(data)
 
 
@@ -76,8 +81,40 @@ async def changePhoto(call: CallbackQuery, state: FSMContext):
     await call.message.answer('Выберите блюдо', reply_markup=allItemsMenu(itemsList, quantity))
 
 
-@dp.callback_query_handler(IsNumber(), state=[Yap.showPhotos, Yap.subMenu])
-async def showItem(call: CallbackQuery, state: FSMContext):
-    newPhoto = int(call.data.split(':')[1])
-    print(newPhoto)
-    await sendNewPhoto(call.message, state, newPhoto, True)
+@dp.callback_query_handler(ph_callback.filter(do='addToCart'), state=Yap.showPhotos)
+async def changePhoto(call: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    if data['table'] in ['rolly', 'royal', 'sety']:
+        quantity = ', quantity'
+    else:
+        quantity = ''
+    itemsList = yap_db.getFromDB(data['table'], f'id, name, weight, price{quantity}', f"position={data['current']}")
+    card: Card = data['card']
+    card.addItem(itemsList[0][0], itemsList[0][1], itemsList[0][2], itemsList[0][3])
+    data['card'] = card
+    await state.set_data(data)
+    await call.message.edit_reply_markup(changePhotoMarkup(1))
+
+
+@dp.callback_query_handler(ph_callback.filter(do=['addQuantity', 'minus']), state=Yap.showPhotos)
+async def changePhoto(call: CallbackQuery, callback_data: dict, state: FSMContext):
+    data = await state.get_data()
+    itemId = yap_db.getFromDB(data['table'], 'id', f'position={data["current"]}')[0][0]
+    card: Card = data['card']
+
+    if callback_data['do'] == 'addQuantity':
+        card.items[itemId].quantity += 1
+    else:
+        if card.items[itemId].quantity > 1:
+            card.items[itemId].quantity -= 1
+        else:
+            card.delete(itemId)
+            itemId = -1
+
+    if itemId == -1:
+        markup = changePhotoMarkup()
+    else:
+        markup = changePhotoMarkup(card.items[itemId].quantity)
+
+    await state.update_data(card=card)
+    await call.message.edit_reply_markup(reply_markup=markup)

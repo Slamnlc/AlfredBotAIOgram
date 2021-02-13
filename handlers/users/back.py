@@ -12,6 +12,9 @@ from states import CurrencyState, Yap
 async def goBack(message: types.Message, state: FSMContext):
     user = User(message.from_user.id)
     currentState = await state.get_state()
+    if currentState is None:
+        await message.answer('Перехожу в главное меню', reply_markup=mainMarkup())
+        return
     currentState = currentState.split(':')[1]
     await message.delete()
     if currentState in [

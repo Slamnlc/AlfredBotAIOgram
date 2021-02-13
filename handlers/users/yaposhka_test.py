@@ -1,5 +1,6 @@
 from aiogram.dispatcher import FSMContext
 
+from classes.Card import Card
 from handlers.users.inline_handlers.yaposhka_inline import sendNewPhoto
 from keyboard.yaposka_markup import mainYapMarkup, sushiMenu, pizzaMenu, allItemsMenu
 from loader import dp, yap_db
@@ -26,6 +27,7 @@ async def showProductsPhoto(message: types.Message, state: FSMContext):
         {
             'current': 1,
             'table': tableName,
+            'card': Card(),
             'productType': message.text,
             'order': 'asc'
         }
