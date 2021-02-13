@@ -11,7 +11,7 @@ def crete_connection():
 
 def create_yaposhka():
     return Database(yaposhkaDbName)
-
+1==1
 
 class Database:
 
