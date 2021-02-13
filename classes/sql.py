@@ -17,7 +17,7 @@ class Database:
         self.connection = psycopg2.connect(
             database=dbName,
             user='postgres',
-            password='26302630Bb',
+            password='***',
             host='127.0.0.1',
             port='5432')
         self.cursor = self.connection.cursor()
