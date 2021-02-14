@@ -39,7 +39,6 @@ async def goBack(message: types.Message, state: FSMContext):
         await state.finish()
 
     elif currentState in ['subMenu', 'showPhotos', 'card']:
-        data = await state.get_data()
-        await deleteMessages(data['startId'], message.message_id, message.chat.id)
+        await deleteMessages(message.message_id, message.chat.id, state)
         await message.answer('Выберите категорию', reply_markup=mainYapMarkup(), disable_notification=True)
         await Yap.yapMainMenu.set()

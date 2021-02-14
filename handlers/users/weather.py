@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from keyboard.markup import locationMarkup, weatherMarkup, settingsMarkup, futureWeatherInlineMarkup, mainMarkup
 from loader import dp
 from classes.User import User
-from service.functions.text_function import getCurrentState, sendKeanu
+from service.functions.text_function import getCurrentState, sendKeanu, deleteMessages
 from service.functions.wheather_function import getWeather, getLocation, searchCities
 from states import WeatherState, SettingsState
 from states.states_list import FirstSettings
@@ -41,10 +41,11 @@ async def weatherByLocation(message: types.Message, state: FSMContext):
                                      reply_markup=settingsMarkup(user))
                 await SettingsState.settingsMenu.set()
             else:
+                await deleteMessages(message.message_id, message.chat.id, state)
                 await message.answer(f"{cityList[0][0]} установлен как город по умолчанию\n"
                                      f"Настройка закончена, спасибо 🤗",
                                      reply_markup=mainMarkup())
-                await sendKeanu(dp, message.chat.id)
+                await sendKeanu(message.chat.id)
                 await state.reset_state()
         else:
             await message.answer(await getWeather(cityList[0]), reply_markup=futureWeatherInlineMarkup())
@@ -73,10 +74,11 @@ async def weatherBySearch(message: types.Message, state: FSMContext):
             await message.answer(await getWeather(weatherSearch[0]))
             user = User(message.from_user.id)
             user.setMainCity(weatherSearch[0])
+            await deleteMessages(message.message_id, message.chat.id, state)
             await message.answer(f"{weatherSearch[0][0]} установлен как город по умолчанию\n"
                                  f"Настройка закончена, спасибо 🤗",
                                  reply_markup=mainMarkup())
-            await sendKeanu(dp, message.chat.id)
+            await sendKeanu(message.chat.id)
             await state.reset_state()
             return
 
@@ -109,10 +111,11 @@ async def selectCity(message: types.Message, state: FSMContext):
             user = User(message.from_user.id)
             user.setMainCity(weatherSearch[elemNumber][1])
             if currentState == 'selectMainCity':
+                await deleteMessages(message.message_id, message.chat.id, state)
                 await message.answer(f"{weatherSearch[elemNumber][0]} установлен как город по умолчанию\n"
                                      f"Настройка закончена, спасибо 🤗",
                                      reply_markup=mainMarkup())
-                await sendKeanu(dp, message.chat.id)
+                await sendKeanu(message.chat.id)
                 await state.reset_state()
                 return
             else:

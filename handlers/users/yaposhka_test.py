@@ -1,5 +1,4 @@
 from aiogram.dispatcher import FSMContext
-from aiogram.utils.exceptions import MessageToDeleteNotFound
 
 from classes.Card import Card
 from handlers.users.inline_handlers.yaposhka_inline import sendNewPhoto
@@ -7,18 +6,8 @@ from keyboard.yaposka_markup import mainYapMarkup, sushiMenu, pizzaMenu, allItem
 from loader import dp, yap_db
 from aiogram import types
 
-from service.functions.text_function import getTableName
+from service.functions.text_function import getTableName, deleteMessages
 from states import Yap
-
-
-async def deleteMessages(endId, chatID, state: FSMContext):
-    data = await state.get_data('startId')
-    for i in range(data['startId'], endId + 1):
-        try:
-            await dp.bot.delete_message(chatID, i)
-        except MessageToDeleteNotFound:
-            pass
-    await state.update_data(startId=endId)
 
 
 @dp.message_handler(content_types='text', text='Test')

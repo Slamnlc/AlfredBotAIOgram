@@ -1,7 +1,21 @@
-from aiogram.dispatcher import FSMContext, Dispatcher
+from aiogram.dispatcher import FSMContext
+from aiogram.utils.exceptions import MessageToDeleteNotFound
+
+from loader import db, dp
 
 
-from loader import db
+async def deleteMessages(endId, chatID, state: FSMContext):
+    data = await state.get_data('startId')
+    if type(data) != int:
+        start = endId - 10
+    else:
+        start = data['startId']
+        await state.update_data(startId=endId)
+    for i in range(start, endId + 1):
+        try:
+            await dp.bot.delete_message(chatID, i)
+        except MessageToDeleteNotFound:
+            pass
 
 
 def convertToUser(st):
@@ -129,7 +143,7 @@ def getFlag(currency):
     return data[0][0]
 
 
-async def sendKeanu(dp: Dispatcher, chatId):
+async def sendKeanu(chatId):
     await dp.bot.send_animation(chatId, 'https://media.giphy.com/media/hv4TC2Ide8rDoXy0iK/giphy-downsized.gif')
 
 
