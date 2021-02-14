@@ -17,7 +17,7 @@ async def openSettingsMenu(message: types.Message, state: FSMContext):
     await Yap.yapMainMenu.set()
     data = {
             'current': 1,
-            'table': '',
+            'type': '',
             'card': Card(),
             'productType': message.text,
             'order': 'asc',
@@ -30,11 +30,12 @@ async def openSettingsMenu(message: types.Message, state: FSMContext):
                                                 'Party пицца🎉', 'Боулы и поке🥣', 'От Шефа🧑‍🍳', 'Супы🍲'],
                     state=[Yap.yapMainMenu, Yap.subMenu, Yap.showPhotos])
 async def showProductsPhoto(message: types.Message, state: FSMContext):
-    tableName = await getTableName(message.text)
+    await message.delete()
+    typeProduct = await getTableName(message.text)
     await Yap.showPhotos.set()
     data = await state.get_data()
     data['current'] = 1,
-    data['table'] = tableName
+    data['type'] = typeProduct
     data['productType'] = message.text
     await state.set_data(data)
     await sendNewPhoto(message, state, 1, True)
@@ -82,24 +83,16 @@ async def sortByName(message: types.Message, state: FSMContext):
         field = 'position'
         txt = 'порядку'
 
-    if data['table'] in ['rolly', 'royal', 'sety']:
+    if data['type'] in ['rolly', 'royal', 'sety']:
         quantity = ', quantity'
     else:
         quantity = ''
 
     query = yap_db.getFromDB(
-        data['table'], f'name, weight, price, position{quantity}', '1=1', orderBy=f'ORDER BY {field} {data["order"]}')
+        'items', f'name, weight, price, position{quantity}', f"type='{data['type']}'",
+        orderBy=f'ORDER BY {field} {data["order"]}')
     await message.answer(f'Отсортировано по {txt}', reply_markup=allItemsMenu(query, quantity),
                          disable_notification=True)
-
-
-@dp.message_handler(content_types='text', text='Корзина 🛒', state=Yap)
-async def showCard(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    if data.__len__() == 0:
-        data['card'] = Card()
-    await message.answer('Ваша корзина:', reply_markup=showCardMarkup(data['card']), disable_notification=True)
-    await Yap.card.set()
 
 
 @dp.message_handler(content_types='text', state=Yap.showPhotos)
@@ -112,16 +105,15 @@ async def showItem(message: types.Message, state: FSMContext):
         await Yap.yapMainMenu.set()
         return
     txt = message.text.split('|')[0].lower().strip()
-    if data['table'] in ['rolly', 'royal', 'sety']:
+    if data['type'] in ['rolly', 'royal', 'sety']:
         quantity = ', quantity'
     else:
         quantity = ''
-
-    result = yap_db.getFromDB(data['table'], f'name, weight, price, position{quantity}',
-                              where=f"name = '{txt}'", orderBy='ORDER BY POSITION')
+    result = yap_db.getFromDB('items', f'name, weight, price, position{quantity}',
+                              where=f"name='{txt}' and type='{data['type']}'", orderBy='ORDER BY POSITION')
     if result.__len__() == 0:
-        result = yap_db.getFromDB(data['table'], f'name, weight, price, position{quantity}',
-                                  where=f"name like '%{txt}%'", orderBy='ORDER BY POSITION')
+        result = yap_db.getFromDB('items', f'name, weight, price, position{quantity}',
+                                  where=f"name like '%{txt}%' and type='{data['type']}'", orderBy='ORDER BY POSITION')
     if result.__len__() == 0:
         await message.answer('Не могу найти блюдо с таким названием 😔')
     elif result.__len__() == 1:
@@ -129,3 +121,36 @@ async def showItem(message: types.Message, state: FSMContext):
     else:
         await dp.bot.delete_message(message.chat.id, message.message_id - 1)
         await message.answer('Выберите блюдо', reply_markup=allItemsMenu(result, quantity), disable_notification=True)
+
+
+@dp.message_handler(content_types='text', text='Корзина 🛒', state=Yap)
+async def showCard(message: types.Message, state: FSMContext):
+    await deleteMessages(message.message_id, message.chat.id, state)
+    data = await state.get_data()
+    if data.__len__() == 0:
+        data['card'] = Card()
+    await message.answer('Ваша корзина:', reply_markup=showCardMarkup(data['card']), disable_notification=True)
+    await Yap.card.set()
+
+
+@dp.message_handler(content_types='text', state=Yap.card)
+async def showCardItem(message: types.Message, state: FSMContext):
+    if 'Назад' in message.text:
+        await deleteMessages(message.message_id, message.chat.id, state)
+        await message.answer('Выберите категорию', reply_markup=mainYapMarkup(), disable_notification=True)
+        await Yap.yapMainMenu.set()
+        return
+    txt = message.text.split('|')[0].lower().strip()
+    data = await state.get_data('card')
+    card: Card = data['card']
+    numb = card.isInCard(txt)
+    if numb != -1:
+        result = yap_db.getFromDB('items', f'name, weight, price, position',
+                                  where=f"id='{card.items[numb].sqlId}'", orderBy='ORDER BY POSITION')
+        if result.__len__() == 1:
+            await sendNewPhoto(message, state, result[0][3], True)
+            await message.answer('Дли изменения количества нажмите + или - на клавиатуре выше',
+                                 reply_markup=types.ReplyKeyboardRemove())
+            await Yap.showPhotos.set()
+    else:
+        await message.answer('Выберите блюдо из корзины')

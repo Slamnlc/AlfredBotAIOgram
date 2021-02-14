@@ -23,6 +23,7 @@ def changePhotoMarkup(quantity=0):
 
     markup.add(InlineKeyboardButton(text='Список блюд', callback_data=ph_callback.new(do='showAll')))
     markup.insert(InlineKeyboardButton(text='К категориям ⬅', callback_data=ph_callback.new(do='menuBack')))
+    markup.add(InlineKeyboardButton(text='Открыть корзину 🛒', callback_data=ph_callback.new(do='goToCard')))
 
     return markup
 
