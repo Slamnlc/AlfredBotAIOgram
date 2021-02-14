@@ -18,6 +18,16 @@ class Card:
     def isInCard(self, itemId):
         return itemId in self.items
 
+    def addQuantity(self, itemId):
+        self.items[itemId].quantity += 1
+        self.number += 1
+        self.totalPrice += self.items[itemId].price
+
+    def delQuantity(self, itemId):
+        self.items[itemId].quantity -= 1
+        self.number -= 1
+        self.totalPrice -= self.items[itemId].price
+
 
 class CardItem:
 

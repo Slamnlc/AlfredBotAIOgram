@@ -2,6 +2,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
 
 from classes.Card import Card
+from handlers.users import yaposhka_test
 from keyboard.inline.callback_data import ph_callback
 from keyboard.yaposka_markup import mainYapMarkup, allItemsMenu, changePhotoMarkup
 from loader import dp, yap_db
@@ -28,21 +29,16 @@ async def sendNewPhoto(message: types.Message, state: FSMContext, newPhoto, from
           f"Вес: <b>{weight}</b>\n" \
           f"Цена: <b>{price} грн</b>\n\n" \
           f"{items}"
+    card: Card = data['card']
+    if card.isInCard(mainSet[0][0]):
+        markup = changePhotoMarkup(card.items[mainSet[0][0]].quantity)
+    else:
+        markup = changePhotoMarkup()
     if fromShow:
-        await message.delete()
-        card: Card = data['card']
-        if card.isInCard(mainSet[0][0]):
-            markup = changePhotoMarkup(card.items[mainSet[0][0]].quantity)
-        else:
-            markup = changePhotoMarkup()
+        # await yaposhka_test.deleteMessages(message.message_id - 2, message.chat.id, state)
         await dp.bot.send_photo(message.chat.id, photo=mainSet[0][5], caption=txt,
                                 reply_markup=markup, parse_mode='HTML')
     else:
-        card: Card = data['card']
-        if card.isInCard(mainSet[0][0]):
-            markup = changePhotoMarkup(card.items[mainSet[0][0]].quantity)
-        else:
-            markup = changePhotoMarkup()
         await message.edit_media(types.input_media.InputMediaPhoto(mainSet[0][5]))
         await message.edit_caption(caption=txt, reply_markup=markup, parse_mode='HTML')
     await state.set_data(data)
@@ -67,16 +63,16 @@ async def changePhoto(call: CallbackQuery, callback_data: dict, state: FSMContex
 
 
 @dp.callback_query_handler(ph_callback.filter(do='menuBack'), state=[Yap.showPhotos, Yap.subMenu])
-async def changePhoto(call: CallbackQuery):
-    await call.message.delete()
+async def changePhoto(call: CallbackQuery, state: FSMContext):
+    await yaposhka_test.deleteMessages(call.message.message_id + 1, call.message.chat.id, state)
     await call.message.answer("Выберите категорию", reply_markup=mainYapMarkup())
     await Yap.yapMainMenu.set()
 
 
 @dp.callback_query_handler(ph_callback.filter(do='showAll'), state=[Yap.showPhotos, Yap.subMenu])
 async def changePhoto(call: CallbackQuery, state: FSMContext):
-    await call.message.delete()
     data = await state.get_data()
+    await yaposhka_test.deleteMessages(call.message.message_id, call.message.chat.id, state)
     if data['table'] in ['rolly', 'royal', 'sety']:
         quantity = ', quantity'
     else:
@@ -108,10 +104,10 @@ async def changePhoto(call: CallbackQuery, callback_data: dict, state: FSMContex
     card: Card = data['card']
 
     if callback_data['do'] == 'addQuantity':
-        card.items[itemId].quantity += 1
+        card.addQuantity(itemId)
     else:
         if card.items[itemId].quantity > 1:
-            card.items[itemId].quantity -= 1
+            card.delQuantity(itemId)
         else:
             card.delete(itemId)
             itemId = -1

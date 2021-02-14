@@ -1,5 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 
+from classes.Card import Card
 from keyboard.inline.callback_data import ph_callback
 from service.functions.text_function import replaceNumberToEmoji
 
@@ -30,6 +31,7 @@ def mainYapMarkup():
     markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 
     markup.add(KeyboardButton('Назад ⬅'))
+    markup.add(KeyboardButton('Корзина 🛒'))
     markup.add(KeyboardButton('Суши🍣'))
     markup.add(KeyboardButton('Пицца🍕'))
     markup.add(KeyboardButton('Боулы и поке🥣'))
@@ -43,9 +45,9 @@ def sushiMenu():
     markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 
     markup.add(KeyboardButton('Назад ⬅'))
-    markup.add(KeyboardButton('Суши 🍣'))
-    markup.add(KeyboardButton('Роллы🍣'))
     markup.add(KeyboardButton('Сеты🍱'))
+    markup.add(KeyboardButton('Роллы🍣'))
+    markup.add(KeyboardButton('Суши 🍣'))
     markup.add(KeyboardButton('Royal👑'))
     markup.add(KeyboardButton('Спринг-ролы🍣'))
 
@@ -79,4 +81,14 @@ def allItemsMenu(itemsList: list, quantity: str):
         else:
             text = f"{item[0].title()} | {item[1]} | {item[2]} грн."
         markup.add(KeyboardButton(text=text))
+    return markup
+
+
+def showCardMarkup(card: Card):
+    markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
+    markup.add(KeyboardButton('Назад ⬅'))
+    markup.add(KeyboardButton(f"Сумма: {card.totalPrice} грн"))
+    markup.insert(f"Блюд: {card.number}")
+    for item in card.items:
+        markup.add(f"{card.items[item].name.title()} | Кол-во: {card.items[item].quantity}")
     return markup

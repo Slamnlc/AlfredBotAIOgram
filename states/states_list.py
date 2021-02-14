@@ -43,3 +43,4 @@ class Yap(StatesGroup):
     yapMainMenu = State()
     subMenu = State()
     showPhotos = State()
+    card = State()
