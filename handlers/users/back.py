@@ -33,7 +33,8 @@ async def goBack(message: types.Message, state: FSMContext):
         'settingsMenu',
         'searchState',
         'weatherMenu',
-        'yapMainMenu'
+        'yapMainMenu',
+        'bookMenu'
     ]:
         await message.answer('Окей. Перехожу в главное меню', reply_markup=mainMarkup(), disable_notification=True)
         await state.finish()

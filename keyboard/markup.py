@@ -80,6 +80,12 @@ def futureWeatherInlineMarkup():
     return markup
 
 
+def bookMainMenu():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(types.KeyboardButton('Назад ⬅'))
+    return markup
+
+
 def bookMarkup(data: list):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     markup.add(types.KeyboardButton('Назад ⬅'))

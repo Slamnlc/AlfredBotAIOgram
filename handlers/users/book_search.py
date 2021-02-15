@@ -1,6 +1,6 @@
 from aiogram.dispatcher import FSMContext
 
-from keyboard.markup import bookMarkup, bookItemMarkup
+from keyboard.markup import bookMarkup, bookItemMarkup, bookMainMenu
 from loader import dp, db
 from aiogram import types
 from states.states_list import BookSearch
@@ -17,7 +17,7 @@ def isNameInSearch(name: str, data: dict):
 
 @dp.message_handler(content_types='text', text='Поиск книг')
 async def openBookSearchMenu(message: types.Message):
-    await message.answer('Введите назвние книги')
+    await message.answer('Введите назвние книги', reply_markup=bookMainMenu())
     await BookSearch.bookMenu.set()
 
 
