@@ -1,11 +1,18 @@
-import requests
 from aiogram.dispatcher import FSMContext
 
-from classes.Book import Book
-from loader import dp
+from keyboard.markup import bookMarkup, bookItemMarkup
+from loader import dp, db
 from aiogram import types
-from lxml import html
 from states.states_list import BookSearch
+
+
+def isNameInSearch(name: str, data: dict):
+    ret = -1
+    for i in range(data.__len__()):
+        if data[i][1] == name:
+            ret = i
+            break
+    return ret
 
 
 @dp.message_handler(content_types='text', text='Поиск книг')
@@ -16,29 +23,23 @@ async def openBookSearchMenu(message: types.Message):
 
 @dp.message_handler(content_types='text', state=BookSearch.bookMenu)
 async def searchBook(message: types.Message, state: FSMContext):
-    whatSearch = message.text.replace(" ", "+")
-    url = f"http://flibusta.site/booksearch?ask={whatSearch}"
-    res = requests.get(url)
-    parsed_body = html.fromstring(res.text)
-    bookResult = parsed_body.xpath("//div[@class='clear-block' and @id='main']//a[contains(@href, '/b/')]")
-    bookFormats = ['read', 'fb2', 'epub', 'mobi', 'download']
-    i = 0
-    bookList = {}
-    for elem in bookResult:
-        bookId = elem.xpath('@href')[0]
-        if elem.xpath('span/text()').__len__() == 0:
-            name = f"{' '.join(elem.xpath('b/text()'))} {' '.join(elem.xpath('text()')).strip()}"
+    if '|' in message.text:
+        show = message.text.lower().split(' |')[0]
+        data = await state.get_data()
+        ret = isNameInSearch(show, data)
+        if ret == -1:
+            await message.answer('Выберите книгу из списка результатов')
         else:
-            name = f"{' '.join(elem.xpath('span/text()'))} {' '.join(elem.xpath('text()')).strip()}"
-        bookUrl = f"http://flibusta.is{elem.xpath('@href')[0]}"
-        bookRes = requests.get(bookUrl)
-        author = elem.xpath('../a[2]/text()')
-        book_parsed = html.fromstring(bookRes.text)
-        dateAdd = book_parsed.xpath("//following-sibling::text()[contains(., 'обавлена')]")
-        formats = []
-        for link in bookFormats:
-            if book_parsed.xpath(f'//a[contains(@href, "{bookId}/{link}")]').__len__() > 0:
-                formats.append(f"http://flibusta.is{bookId}/{link}")
-        bookList[i] = Book(name, author[0], dateAdd[0], bookUrl, '', formats)
-        i += 1
-    1==1
+            txt = f"Книга: <b>{data[ret][1].title()}</b>\n" \
+                  f"Автор: <b>{data[ret][2].title()}</b>\n\n" \
+                  f"Аннотация: {data[ret][3]}"
+            await message.answer(text=txt, reply_markup=bookItemMarkup(data[ret][6][0]))
+    else:
+        whatSearch = ' '.join(message.text.lower().split())
+        data = db.getFromDB('books', '*', where=f"name like '%{whatSearch}%'",
+                            orderBy='order by array_length(links,2) desc')
+        if data.__len__() == 0:
+            await message.answer('Ничего не нашел😥')
+        else:
+            await message.answer('Вот, что я нашел 📚', reply_markup=bookMarkup(data))
+            await state.set_data(data)

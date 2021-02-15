@@ -1,78 +1,77 @@
-import json
-import datetime
+from datetime import date, timedelta
 from data.config import IMAGE_PATH
 import locale
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
+from loader import db
 
 
 def drawHistogramm(howMany, currency, userID):
     locale.setlocale(locale.LC_ALL, "ru_RU")
     osX = []
     osY = []
-    with open(f'/Users/maksim/CurrencyBot/rate/{currency}.json', 'r') as outFile:
-        data = json.load(outFile)
-    daysNumber = 0
-    minValue = 0
-    maxValue = 0
-    lastMonth = 0
-    ii = 0
-    monthArray = []
-    dataList = list(data.keys())
-    dataList.reverse()
+    today = date.today() - timedelta(days=howMany)
+    data = db.getFromDB(
+        tableName=currency,
+        what="to_char(date,'TMMon.YY') as dt, "
+             'cast(round(avg(rate),3) as float)',
+        where=f"date >= '{today}'",
+        groupBy='group by dt, extract(MONTH from date), extract(year from date)',
+        orderBy='order by extract(year from date) asc,extract(MONTH from date) asc'
+    )
+
     fig, ax = plt.subplots()
-    for i in range(dataList.__len__() - 1 - howMany, dataList.__len__()):
-        currDate = datetime.datetime.strptime(dataList[i], '%Y%m%d')
-        monthNumber = currDate.strftime('%b.%y')
-        if (lastMonth != monthNumber and lastMonth != 0) or i == dataList.__len__() - 1:
-            if len(monthArray) != 0:
-                osX.append(lastMonth)
-                middleValue = round(sum(monthArray) / len(monthArray), 2)
-                if min(monthArray) > minValue:
-                    minValue = min(monthArray)
-                if max(monthArray) > maxValue:
-                    maxValue = max(monthArray)
-                osY.append(middleValue)
-                ax.text(lastMonth, middleValue + 0.1, middleValue, ha="center")
-                monthArray = []
-                ii += 1
-            lastMonth = monthNumber
+    for item in data:
+        osX.append(item[0])
+        osY.append(item[1])
+        if item[1] > 10:
+            offset = 0.1
+        elif item[1] > 2:
+            offset = 0.01
+        elif item[1] > 1:
+            offset = 0.005
         else:
-            monthArray.append(data[dataList[i]]['rate'])
-            lastMonth = monthNumber
-        daysNumber += 1
-    minValue -= minValue * 0.2
-    maxValue += maxValue * 0.008
+            offset = 0.001
+        ax.text(item[0], item[1] + offset, item[1], ha='center')
+
+    minValue = min(osY) - min(osY) * 0.2
+    maxValue = max(osY) + max(osY) * 0.015
     ax.bar(osX, osY)
     ax.set_ylim(minValue, maxValue)
-    fig.set_figwidth(ii + 2)
+
+    fig.set_figwidth(data.__len__() + 2)
     fig.set_figheight(7)
     xax = ax.xaxis
     xlabels = xax.get_ticklabels()
 
     for label in xlabels:
         label.set_rotation(75)
-    if ii < 5:
+    if data.__len__() < 5:
         monthName = 'месяца'
     else:
         monthName = 'месяцев'
-    plt.title(f'Средний курс {currency} за {ii} {monthName} ({daysNumber - 1} дней)')
+
+    plt.title(f'Средний курс {currency} за {data.__len__()} {monthName} ({howMany} дней)')
     plt.savefig(f'{IMAGE_PATH}{userID}.png')
     return f'{IMAGE_PATH}{userID}.png'
 
 
 def drawDiagram(howMany, currency, userID):
-    with open(f'/Users/maksim/CurrencyBot/rate/{currency}.json', 'r') as outFile:
-        data = json.load(outFile)
-    dataList = list(data.keys())
-    dataList.reverse()
+    today = date.today() - timedelta(days=howMany)
+    data = db.getFromDB(
+        tableName=currency,
+        what="to_char(date,'DD.MM') as dt,cast(rate as float)",
+        where=f"date >= '{today}'",
+        orderBy='order by date asc'
+    )
+
     osX = []
     osY = []
-    for i in range(dataList.__len__() - 1 - howMany, dataList.__len__()):
-        currDate = datetime.datetime.strptime(dataList[i], '%Y%m%d')
-        osX.append(currDate.strftime("%d.%m"))
-        osY.append(data[dataList[i]]['rate'])
+
+    for item in data:
+        osX.append(item[0])
+        osY.append(item[1])
 
     fig = plt.figure()
     ax = fig.add_subplot(111)

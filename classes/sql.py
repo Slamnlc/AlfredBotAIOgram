@@ -23,14 +23,16 @@ class Database:
             host='127.0.0.1',
             port='5432')
         self.cursor = self.connection.cursor()
+        self.cursor.execute("set LC_TIME = 'ru_RU.KOI8-R'")
         print("Connected to database")
 
-    def getFromDB(self, tableName, what, where, join='', orderBy=''):
+    def getFromDB(self, tableName, what, where, join='', orderBy='', groupBy=''):
         self.cursor.execute(
             f"SELECT {what.upper()} "
             f"FROM {tableName.upper()} "
             f"{join} "
             f"WHERE {where} "
+            f"{groupBy} "
             f"{orderBy}"
         )
         return self.cursor.fetchall()

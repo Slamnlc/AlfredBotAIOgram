@@ -2,7 +2,7 @@ from aiogram import types
 
 from classes import User
 from data.config import ADMINS
-from keyboard.inline.callback_data import weather_callback
+from keyboard.inline.callback_data import weather_callback, book_search
 from loader import db
 from service.functions.currency_function import getUsersMarkup
 
@@ -77,4 +77,21 @@ def futureWeatherInlineMarkup():
 
     markup.add(days_1, days_3, days_7)
 
+    return markup
+
+
+def bookMarkup(data: list):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(types.KeyboardButton('Назад ⬅'))
+    for elem in data:
+        markup.add(types.KeyboardButton(f"{elem[1].title()} | {elem[2].title()} | "
+                                        f"{elem[4]} | Файлов: {elem[6][0].__len__()}"))
+    return markup
+
+
+def bookItemMarkup(data: list):
+    markup = types.InlineKeyboardMarkup(row_width=6)
+    for item in data:
+        txt = item.split('/')[-1]
+        markup.insert(types.InlineKeyboardButton(text=txt, callback_data=book_search.new(link=item)))
     return markup

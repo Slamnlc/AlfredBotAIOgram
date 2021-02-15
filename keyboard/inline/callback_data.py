@@ -7,3 +7,5 @@ currency_callback = CallbackData('cur', 'item_name')
 weather_callback = CallbackData('w', 'days')
 
 ph_callback = CallbackData('ph', 'do')
+
+book_search = CallbackData('bs', 'link')

@@ -1,6 +1,6 @@
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery
-
+from aiogram.utils.exceptions import MessageNotModified
 from keyboard.currency_markups import mainCurrencyMarkup, currencyMarkup
 from keyboard.inline.callback_data import numeric_callback
 from loader import dp
@@ -41,9 +41,11 @@ async def setValue(call: CallbackQuery, callback_data: dict):
     currentResult = f"{currentResult}{whatAdd}"
     if is_Digit(currentResult):
         returnVal = calculateCurrency(call.message.reply_markup, currentResult)
-        if call.message.reply_markup.inline_keyboard[2][0].text != returnVal:
+        try:
             call.message.reply_markup.inline_keyboard[2][0].text = returnVal
             await call.message.edit_text(text=call.message.text, reply_markup=call.message.reply_markup)
+        except MessageNotModified:
+            pass
 
 
 @dp.callback_query_handler(numeric_callback.filter(item_name='back'), state=CurrencyState.selectCurrencyFrom)
@@ -76,7 +78,10 @@ async def deleteSymbolInline(call: CallbackQuery):
 @dp.callback_query_handler(numeric_callback.filter(item_name='clear'), state=CurrencyState.selectCurrencyFrom)
 async def clearSymbolsInline(call: CallbackQuery):
     call.message.reply_markup.inline_keyboard[2][0].text = 'Результат'
-    await call.message.edit_text(text=call.message.text, reply_markup=call.message.reply_markup)
+    try:
+        await call.message.edit_text(text=call.message.text, reply_markup=call.message.reply_markup)
+    except MessageNotModified:
+        pass
 
 
 @dp.callback_query_handler(numeric_callback.filter(item_name='.'), state=CurrencyState.selectCurrencyFrom)

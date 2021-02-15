@@ -10,7 +10,7 @@ from classes import User
 def mainCurrencyMarkup(user: User):
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     if user.userCurrency is None:
-        currencyList = ['USD', 'RUB']
+        currencyList = ['USD', 'EUR']
     else:
         currencyList = user.userCurrency
 

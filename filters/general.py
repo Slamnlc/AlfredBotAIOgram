@@ -18,3 +18,12 @@ class IsFood(BoundFilter):
             return True
         else:
             return False
+
+
+class IsFlib(BoundFilter):
+
+    async def check(self, callback_data: dict):
+        if 'flibusta.is' in callback_data.data.split(':')[1]:
+            return True
+        else:
+            return False

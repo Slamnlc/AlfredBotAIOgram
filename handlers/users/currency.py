@@ -1,3 +1,5 @@
+import os
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from filters import IsCurrency
@@ -28,11 +30,15 @@ async def showRate(message: types.Message, state: FSMContext):
         await message.answer("Это легко, 1 гривна как стоила 1 гривну, так и стоит 1 гривну 🙃",
                              disable_notification=True)
     elif 20 < user.dayForShow < 63:
-        await dp.bot.send_photo(message.chat.id, photo=open(drawDiagram(user.dayForShow, currency, user.id), 'rb'),
+        file = drawDiagram(user.dayForShow, currency, user.id)
+        await dp.bot.send_photo(message.chat.id, photo=open(file, 'rb'),
                                 caption=f'Курс {currency} за {user.dayForShow} дней')
+        os.remove(file)
     elif user.dayForShow > 62:
-        await dp.bot.send_photo(message.chat.id, open(drawHistogramm(user.dayForShow, currency, user.id), 'rb'),
+        file = drawHistogramm(user.dayForShow, currency, user.id)
+        await dp.bot.send_photo(message.chat.id, open(file, 'rb'),
                                 f'Курс {currency} за {user.dayForShow} дней')
+        os.remove(file)
     else:
         currState = await getCurrentState(state)
         user.addCurrencyUse(currency)
