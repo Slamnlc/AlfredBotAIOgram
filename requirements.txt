@@ -1,0 +1,5 @@
+
+aiogram
+matplotlib
+googletrans
+psycopg2-binary

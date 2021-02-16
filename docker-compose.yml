@@ -1,0 +1,39 @@
+version: "3.1"
+
+
+services:
+  db:
+    container_name: database
+    image: postgres
+    environment:
+      PG_PASSWORD: $PGPASS
+    restart: always
+    ports:
+      - 5432:5432
+    networks:
+      - alfredbot
+    volumes:
+      - ./pgdata:/var/lib/postgresql
+
+  tgbot:
+    container_name: bot
+    build:
+      context: .
+    command: python app.py
+    restart: always
+    networks:
+      - alfredbot
+    env_file:
+      - ".env"
+    volumes:
+      - .:/src
+    depends_on:
+      - db
+
+
+
+
+networks:
+  alfredbot:
+    driver: bridge
+
