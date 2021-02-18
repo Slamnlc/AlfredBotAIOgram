@@ -12,9 +12,10 @@ from loader import db
 
 @dp.message_handler(text='Приступить к настройке', state=FirstSettings.mainStart)
 async def start_showMainCurrency(message: types.Message):
+    user = User(message.from_user.id)
     await message.delete()
     await message.answer(text='Для начала, укажите валюту, которая будет использована как основная в конверторе валют?',
-                         reply_markup=currencyMarkup(user=User(message.from_user.id)))
+                         reply_markup=currencyMarkup(user))
     await FirstSettings.showCurrency.set()
 
 

@@ -5,15 +5,18 @@ services:
   db:
     container_name: database
     image: postgres
+    env_file:
+      - ".env"
     environment:
-      PG_PASSWORD: $PGPASS
+      - POSTGRES_PASSWORD=$PGPASS
+      - POSTGRES_USER=$PGUSER
     restart: always
     ports:
       - 5432:5432
     networks:
       - alfredbot
     volumes:
-      - ./pgdata:/var/lib/postgresql
+      - ./postgres:/var/lib/postgresql
 
   tgbot:
     container_name: bot

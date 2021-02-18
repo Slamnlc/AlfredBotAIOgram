@@ -49,9 +49,12 @@ def settingsMarkup(user: User):
     return markup
 
 
-def locationMarkup():
+def locationMarkup(backToMenu=False):
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    markup.add(types.KeyboardButton('Назад ⬅'))
+    if backToMenu:
+        markup.add(types.KeyboardButton('Перейти в главное меню'))
+    else:
+        markup.add(types.KeyboardButton('Назад ⬅'))
     markup.add(types.KeyboardButton(text='Отправить местоположение', request_location=True))
     return markup
 

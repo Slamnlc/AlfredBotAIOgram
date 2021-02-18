@@ -72,7 +72,7 @@ async def setDayForShow(message: types.Message, state: FSMContext):
             else:
                 await message.answer(f"Окей. Буду выводить курс за {message.text} дней\n"
                                      f"Установим населенный пункт для погоды по умолчанию?",
-                                     reply_markup=locationMarkup())
+                                     reply_markup=locationMarkup(True))
                 await FirstSettings.indicateMainCity.set()
         else:
             await message.answer("Пожалуйста, укажите целое число от 1 до 400")

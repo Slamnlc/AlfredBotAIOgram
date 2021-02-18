@@ -110,13 +110,12 @@ class Database:
         print(f"User with id {userID} was deleted")
 
     def addUser(self, idUser, currency='UAH',
-                mainCurrency=('EUR', 'USD'), location='NULL', currencyPriority=None, dayForShow=10):
+                mainCurrency=['EUR', 'USD'], location='NULL', currencyPriority=None, dayForShow=10):
         if currencyPriority is None:
             currencyPriority = getIndicatedCurrency()
-        currencyPriority = json.dumps(currencyPriority)
         query = f"INSERT INTO USERS (ID, LOCATION, CURRENCY, CURRENCYPRIORITY, MAINCURRENCY, " \
                 f"DAYFORSHOW) VALUES ({idUser}, {location}, '{currency}', " \
-                f"'{currencyPriority}'::json, ARRAY[{mainCurrency}],{dayForShow})"
+                f"'{json.dumps(currencyPriority)}'::json, ARRAY[{mainCurrency}],{dayForShow})"
         self.cursor.execute(query)
         self.connection.commit()
         print(f"User with ID {idUser} was created")

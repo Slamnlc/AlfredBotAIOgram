@@ -8,7 +8,9 @@ from keyboard.currency_markups import mainCurrencyMarkup
 from keyboard.yaposka_markup import mainYapMarkup
 from loader import dp
 from classes.User import User
+from service.functions.text_function import sendKeanu
 from states import CurrencyState, Yap
+from states.states_list import FirstSettings
 
 
 @dp.message_handler(Text(contains='Назад'), content_types='text', state='*')
@@ -43,3 +45,10 @@ async def goBack(message: types.Message, state: FSMContext):
         await deleteMessages(message.message_id, message.chat.id, state)
         await message.answer('Выберите категорию', reply_markup=mainYapMarkup(), disable_notification=True)
         await Yap.yapMainMenu.set()
+
+@dp.message_handler(text='Перейти в главное меню', content_types='text', state=FirstSettings.indicateMainCity)
+async def openMainMenu(message: types.Message, state: FSMContext):
+    await message.answer('Открываю главное меню\nНастройка закончена, спасибо 🤗', reply_markup=mainMarkup())
+    await sendKeanu(message.chat.id)
+    await state.finish()
+
