@@ -17,7 +17,7 @@ def isNameInSearch(name: str, data: dict):
 
 @dp.message_handler(content_types='text', text='Поиск книг')
 async def openBookSearchMenu(message: types.Message):
-    await message.answer('Введите назвние книги', reply_markup=bookMainMenu())
+    await message.answer('Введите название книги', reply_markup=bookMainMenu())
     await BookSearch.bookMenu.set()
 
 
