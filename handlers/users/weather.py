@@ -17,7 +17,8 @@ async def weatherMenu(message: types.Message, state: FSMContext):
     if user.location is None:
         pass
     else:
-        await message.answer(await getWeather(user.getSearchQuery(), state), reply_markup=futureWeatherInlineMarkup(),
+        await message.answer(await getWeather(user.getSearchQuery(), state),
+                             reply_markup=futureWeatherInlineMarkup(),
                              disable_notification=True)
     await message.answer('Отправте сообщение с названием населенного пункта',
                          reply_markup=locationMarkup(), disable_notification=True)
@@ -82,11 +83,13 @@ async def weatherBySearch(message: types.Message, state: FSMContext):
             await state.reset_state()
             return
 
-        await message.answer(await getWeather(weatherSearch[0]), reply_markup=futureWeatherInlineMarkup())
+        await message.answer(await getWeather(weatherSearch[0], state), reply_markup=futureWeatherInlineMarkup())
         return
     else:
         await message.answer('Укажите населенный пункт 🏙️',
-                             reply_markup=weatherMarkup(weatherSearch, addSearch=currentState == 'weatherMenu'),
+                             reply_markup=weatherMarkup(
+                                 cityList=weatherSearch,
+                                 addSearch=currentState == 'weatherMenu'),
                              disable_notification=True)
     await state.set_data(weatherSearch)
     if currentState == 'searchMainCity':
@@ -105,7 +108,9 @@ async def selectCity(message: types.Message, state: FSMContext):
     if message.text.split('.')[0].isdigit():
         elemNumber = int(message.text.split('.')[0]) - 1
         weatherSearch = await state.get_data()
-        await message.answer(await getWeather(weatherSearch[elemNumber]), disable_notification=True)
+        await message.answer(await getWeather(weatherSearch[elemNumber]),
+                             # reply_markup=futureWeatherInlineMarkup(),
+                             disable_notification=True)
         currentState = await getCurrentState(state)
         if currentState in ['setMainCity', 'selectMainCity']:
             user = User(message.from_user.id)

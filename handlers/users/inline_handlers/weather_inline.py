@@ -10,7 +10,8 @@ from service.functions.text_function import addWeatherEmoji, replaceNumberToEmoj
 from states import WeatherState
 
 
-@dp.callback_query_handler(weather_callback.filter(days=['1', '3', '6']), state=WeatherState.weatherMenu)
+@dp.callback_query_handler(weather_callback.filter(days=['1', '3', '6']),
+                           state=[WeatherState.weatherMenu, WeatherState.searchState])
 async def showFutureWeather(call: CallbackQuery, callback_data: dict, state: FSMContext):
     data = await state.get_data()
     st = ''
