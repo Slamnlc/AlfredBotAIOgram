@@ -9,7 +9,10 @@ from states.states_list import FirstSettings
 
 @dp.message_handler(CommandHelp())
 async def bot_help(message: types.Message):
-    await message.answer('Тут должна быть помощь')
+    await message.answer(f"Я бот Альфред и вот что я умею:\n"
+                         f"- Работать с курсом валют💱\n"
+                         f"- Показывать погоду☂️\n"
+                         f"Если что-то пошло не так - нажми \\start")
 
 
 @dp.message_handler(CommandStart(), state='*')
