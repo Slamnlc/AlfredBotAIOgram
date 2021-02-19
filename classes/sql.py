@@ -1,4 +1,6 @@
 import json
+import logging
+
 import psycopg2
 
 from data.config import yaposhkaDbName, mainDbName, dbUserName, dbPassword, HOSTDB
@@ -108,7 +110,7 @@ class Database:
     def deleteUser(self, userID):
         self.cursor.execute(f"DELETE FROM USERS WHERE ID={userID}")
         self.connection.commit()
-        print(f"User with id {userID} was deleted")
+        logging.info(f"User with id {userID} was deleted")
 
     def addUser(self, idUser, currency='UAH',
                 mainCurrency=['EUR', 'USD'], location='NULL', currencyPriority=None, dayForShow=10):
@@ -119,7 +121,7 @@ class Database:
                 f"'{json.dumps(currencyPriority)}'::json, ARRAY[{mainCurrency}],{dayForShow})"
         self.cursor.execute(query)
         self.connection.commit()
-        print(f"User with ID {idUser} was created")
+        logging.info(f"User with ID {idUser} was created")
         data = {
             'id': idUser,
             'location': location,
