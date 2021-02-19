@@ -121,6 +121,7 @@ class Database:
                 f"'{json.dumps(currencyPriority)}'::json, ARRAY[{mainCurrency}],{dayForShow})"
         self.cursor.execute(query)
         self.connection.commit()
+
         logging.info(f"User with ID {idUser} was created")
         data = {
             'id': idUser,
