@@ -7,7 +7,7 @@ from loader import dp
 from states.states_list import FirstSettings
 
 
-@dp.message_handler(CommandHelp())
+@dp.message_handler(CommandHelp(), state="*")
 async def bot_help(message: types.Message):
     await message.answer(f"Я бот Альфред и вот что я умею:\n"
                          f"- Работать с курсом валют💱\n"
