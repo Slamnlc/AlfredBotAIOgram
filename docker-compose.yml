@@ -16,7 +16,7 @@ services:
     networks:
       - alfredbot
     volumes:
-      - ./postgres:/var/lib/postgresql
+      - ./:/var/lib/postgresql
 
   tgbot:
     container_name: bot

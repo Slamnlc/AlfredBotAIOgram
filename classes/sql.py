@@ -1,7 +1,7 @@
 import json
 import psycopg2
 
-from data.config import yaposhkaDbName, mainDbName, dbUserName, dbPassword
+from data.config import yaposhkaDbName, mainDbName, dbUserName, dbPassword, HOSTDB
 from service.functions.currency_function import getIndicatedCurrency
 
 
@@ -20,10 +20,11 @@ class Database:
             database=dbName,
             user=dbUserName,
             password=dbPassword,
-            host='127.0.0.1',
+            host=HOSTDB,
             port='5432')
         self.cursor = self.connection.cursor()
-        self.cursor.execute("set LC_TIME = 'ru_RU.KOI8-R'")
+        if HOSTDB == '127.0.0.1':
+            self.cursor.execute("set LC_TIME = 'ru_RU.KOI8-R'")
         print("Connected to database")
 
     def getFromDB(self, tableName, what, where, join='', orderBy='', groupBy=''):
