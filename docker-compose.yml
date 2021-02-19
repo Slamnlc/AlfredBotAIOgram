@@ -10,6 +10,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=$PGPASS
       - POSTGRES_USER=$PGUSER
+      - LC_ALL=ru_RU.KOI8-R
     restart: always
     ports:
       - 5432:5432
