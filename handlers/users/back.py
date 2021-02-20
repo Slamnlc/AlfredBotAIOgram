@@ -46,9 +46,9 @@ async def goBack(message: types.Message, state: FSMContext):
         await message.answer('Выберите категорию', reply_markup=mainYapMarkup(), disable_notification=True)
         await Yap.yapMainMenu.set()
 
+
 @dp.message_handler(text='Перейти в главное меню', content_types='text', state=FirstSettings.indicateMainCity)
 async def openMainMenu(message: types.Message, state: FSMContext):
     await message.answer('Открываю главное меню\nНастройка закончена, спасибо 🤗', reply_markup=mainMarkup())
     await sendKeanu(message.chat.id)
     await state.finish()
-
