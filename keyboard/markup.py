@@ -1,7 +1,7 @@
 from aiogram import types
 
 from classes import User
-from data.config import ADMINS
+from data.config import ADMINS, HOSTDB
 from keyboard.inline.callback_data import weather_callback, book_search
 from loader import db
 from service.functions.currency_function import getUsersMarkup
@@ -18,7 +18,8 @@ def mainMarkup():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     markup.add(types.KeyboardButton('Курс валют'))
     markup.add(types.KeyboardButton('Погода'))
-    markup.add(types.KeyboardButton('Поиск книг'))
+    if HOSTDB == '127.0.0.1':
+        markup.add(types.KeyboardButton('Поиск книг'))
     markup.add(types.KeyboardButton('Настройки'))
     markup.add(types.KeyboardButton('Test'))
 
