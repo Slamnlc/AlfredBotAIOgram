@@ -1,6 +1,5 @@
 from utils.set_bot_commands import set_default_commands, clear_all_commands
 
-
 async def on_startup(dp):
     import filters
     filters.setup(dp)

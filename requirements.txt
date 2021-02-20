@@ -1,7 +1,8 @@
 
-requests
-aiogram
-matplotlib
-googletrans
+requests~=2.25.1
+aiogram~=2.11.2
+matplotlib~=3.3.4
+googletrans~=4.0.0rc1
 psycopg2-binary
-lxml
+lxml~=4.6.2
+aioschedule~=0.5.2

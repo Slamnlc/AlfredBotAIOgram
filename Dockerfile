@@ -3,6 +3,7 @@ FROM python:3.8
 WORKDIR /src
 RUN mkdir /src/images
 RUN apt-get update
+RUN apt-get -y install cron
 RUN apt-get install -y locales locales-all
 RUN update-locale LANG=ru_RU.UTF-8
 ENV LC_ALL ru_RU.UTF-8
