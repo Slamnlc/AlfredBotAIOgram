@@ -35,7 +35,7 @@ def getTodayRate(currency):
 def getReturnRate(currency, howMany):
     st = ''
     rateList = getRate(currency, howMany)
-    flag = loader.db.getFromDB('currency', 'emoji', f"name='{currency}'")[0][0]
+    flag = loader.db.getFromDB('currency', 'emoji', f"name='{currency}'", orderBy='ORDER BY DATE DESC')[0][0]
     for x in rateList:
         st = f'{st}{x}\n'
     return f"Курс {currency} {flag} {getMeasure(currency)} за последние " \
