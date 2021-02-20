@@ -1,3 +1,3 @@
 #!/bin/bash
-python app.py &
-python scripts/messages/sendMessages.py &
+start python app.py
+start python scripts/messages/sendMessages.py
