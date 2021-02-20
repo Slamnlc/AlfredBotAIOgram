@@ -8,8 +8,8 @@ services:
     env_file:
       - ".env"
     environment:
-      - POSTGRES_PASSWORD=$PGPASS
-      - POSTGRES_USER=$PGUSER
+      - POSTGRES_PASSWORD:$PGPASS
+      - POSTGRES_USER:$PGUSER
     restart: always
     ports:
       - 5432:5432
