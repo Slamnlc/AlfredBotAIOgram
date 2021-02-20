@@ -8,4 +8,4 @@ cd /home/ubuntu/AlfredBotAIOgram/
 sudo snap install docker
 sudo sudo docker-compose up --no-start --build
 sudo docker-compose exec db psql -U maksim -f /var/lib/postgresql/backUp.sql
-sudo sudo docker-compose up
+#sudo sudo docker-compose up
