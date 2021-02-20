@@ -12,7 +12,7 @@ import requests
 def getRate(currency, howMany):
     locale.setlocale(locale.LC_TIME, "ru_RU")
     today = date.today() - timedelta(days=howMany)
-    data = loader.db.getFromDB(currency, 'rate', f"date >= '{today}'")
+    data = loader.db.getFromDB(currency, 'rate', f"date >= '{today}'", orderBy='ORDER BY DATE DESC')
     returnList = []
     for i in range(data.__len__()):
         today = date.today() - timedelta(days=i)
@@ -35,7 +35,7 @@ def getTodayRate(currency):
 def getReturnRate(currency, howMany):
     st = ''
     rateList = getRate(currency, howMany)
-    flag = loader.db.getFromDB('currency', 'emoji', f"name='{currency}'", orderBy='ORDER BY DATE DESC')[0][0]
+    flag = loader.db.getFromDB('currency', 'emoji', f"name='{currency}'")[0][0]
     for x in rateList:
         st = f'{st}{x}\n'
     return f"Курс {currency} {flag} {getMeasure(currency)} за последние " \
