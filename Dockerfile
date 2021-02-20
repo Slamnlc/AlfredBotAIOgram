@@ -12,3 +12,4 @@ ENV LANGUAGE ru_RU.UTF-8
 COPY requirements.txt /src/requirements.txt
 RUN pip install -r requirements.txt
 COPY . /src
+RUN chmod 0644 main.sh
