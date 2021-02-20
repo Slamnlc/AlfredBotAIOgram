@@ -2,13 +2,13 @@ import aioschedule as schedule
 import asyncio
 import time
 
-import data.config
+# import data.config
 from loader import dp
 
 
 async def job():
-    for admin in data.config.ADMINS:
-        await dp.bot.send_message(admin, 'Ну шо? Я настроил')
+    # for admin in data.config.ADMINS:
+    await dp.bot.send_message(185200431, 'Ну шо? Я настроил')
 
 
 if __name__ == '__main__':
