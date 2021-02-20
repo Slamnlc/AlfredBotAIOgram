@@ -22,7 +22,7 @@ services:
     container_name: bot
     build:
       context: .
-    command: sh main.sh
+    command: python app.py
     restart: always
     networks:
       - alfredbot
