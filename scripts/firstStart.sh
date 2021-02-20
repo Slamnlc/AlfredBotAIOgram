@@ -1,4 +1,7 @@
-sudo apt update
+sudo apt-get update
+git clone https://github.com/Slamnlc/AlfredBotAIOgram
+mv /home/ubuntu/config.py /home/ubuntu/AlfredBotAIOgram/data/
+mv /home/ubuntu/backUp.sql /home/ubuntu/AlfredBotAIOgram/
 sed -i 's/127.0.0.1/172.31.11.161/g' /home/ubuntu/AlfredBotAIOgram/data/config.py
 # shellcheck disable=SC2164
 cd /home/ubuntu/AlfredBotAIOgram/
