@@ -1,3 +1,4 @@
+#!/bin/bash
 sudo apt-get update
 git clone https://github.com/Slamnlc/AlfredBotAIOgram
 mv /home/ubuntu/config.py /home/ubuntu/AlfredBotAIOgram/data/
@@ -9,8 +10,8 @@ sed -i 's/postgres/maksim/g' /home/ubuntu/AlfredBotAIOgram/data/config.py
 cd /home/ubuntu/AlfredBotAIOgram/
 sudo snap install docker
 sudo sudo docker-compose up --detach --build
-sudo docker-compose exec db psql -c "create database alfredBot"
-sudo docker-compose exec db psql -c "create database yaposhka"
-sudo docker-compose exec db psql -U maksim alfredBot /var/lib/postgresql/main.sql
-sudo docker-compose exec db psql -U maksim yaposhka /var/lib/postgresql/yap.sql
+sudo docker-compose exec -T db psql -c "create database alfredBot"
+sudo docker-compose exec -T db psql -c "create database yaposhka"
+sudo docker-compose exec -T db psql -U maksim alfredBot /var/lib/postgresql/main.sql
+sudo docker-compose exec -T db psql -U maksim yaposhka /var/lib/postgresql/yap.sql
 sudo sudo docker-compose up
