@@ -7,5 +7,6 @@ sed -i 's/127.0.0.1/db/g' /home/ubuntu/AlfredBotAIOgram/data/config.py
 cd /home/ubuntu/AlfredBotAIOgram/
 sudo snap install docker
 sudo sudo docker-compose up --detach
-sudo docker-compose exec db psql -U maksim -f /var/lib/postgresql/backUp.sql
-#sudo sudo docker-compose up
+sudo docker-compose exec db psql -U maksim -f /var/lib/postgresql/main.sql
+sudo docker-compose exec db psql -U maksim -f /var/lib/postgresql/yap.sql
+sudo sudo docker-compose up
