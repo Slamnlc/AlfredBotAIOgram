@@ -5,11 +5,6 @@ services:
   db:
     container_name: database
     image: postgres
-    env_file:
-      - ".env"
-    environment:
-      - POSTGRES_PASSWORD=$PGPASS
-      - POSTGRES_USER=$PGUSER
     restart: always
     ports:
       - 5432:5432
@@ -26,8 +21,6 @@ services:
     restart: always
     networks:
       - alfredbot
-    env_file:
-      - ".env"
     volumes:
       - .:/src
     depends_on:
