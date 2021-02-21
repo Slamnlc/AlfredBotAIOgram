@@ -14,6 +14,6 @@ sudo snap install docker
 sudo sudo docker-compose up --detach --build
 sudo docker-compose exec -T db psql -c "create database alfredbot"
 sudo docker-compose exec -T db psql -c "create database yaposhka"
-sudo docker-compose exec -T db psql -U maksim alfredbot -f /var/lib/postgresql/main.sql
-sudo docker-compose exec -T db psql -U maksim yaposhka -f /var/lib/postgresql/yap.sql
+sudo docker-compose exec -T db psql -U maksim alfredbot < ./main.sql
+sudo docker-compose exec -T db psql -U maksim yaposhka < ./yap.sql
 sudo sudo docker-compose up
