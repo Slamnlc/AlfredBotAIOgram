@@ -14,8 +14,8 @@ sudo snap install docker
 sudo sudo docker-compose up --detach --build
 sudo docker-compose exec -T db psql -c "create database alfredbot"
 sudo docker-compose exec -T db psql -c "create database yaposhka"
-sudo docker-compose exec -T db psql -U maksim -d alfredbot -f ./main.sql
-sudo docker-compose exec -T db psql -U maksim -d yaposhka -f ./yap.sql
-sudo docker-compose exec -T db psql -c "alter database alfredbot owner to maksim"
-sudo docker-compose exec -T db psql -c "alter database yaposhka owner to maksim"
-sudo sudo docker-compose up
+#sudo docker-compose exec -T db psql -U maksim -d alfredbot -f ./main.sql
+#sudo docker-compose exec -T db psql -U maksim -d yaposhka -f ./yap.sql
+#sudo docker-compose exec -T db psql -c "alter database alfredbot owner to maksim"
+#sudo docker-compose exec -T db psql -c "alter database yaposhka owner to maksim"
+#sudo sudo docker-compose up
