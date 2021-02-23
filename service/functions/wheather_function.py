@@ -127,12 +127,5 @@ async def getWeather(cityElem, state: FSMContext = None):
             'type': weatherType[1:]
         }
         await state.set_data(data)
-        # await state(
-        #     {
-        #         'min': minTemp[1:],
-        #         'max': maxTemp[1:],
-        #         'type': weatherType[1:]
-        #     }
-        # )
 
     return addWeatherEmoji(whatReturn)

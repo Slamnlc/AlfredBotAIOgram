@@ -106,15 +106,15 @@ async def weatherBySearch(message: types.Message, state: FSMContext):
 async def selectCity(message: types.Message, state: FSMContext):
     await message.delete()
     if message.text.split('.')[0].isdigit():
+        currentState = await getCurrentState(state)
         elemNumber = int(message.text.split('.')[0]) - 1
         weatherSearch = await state.get_data('search')
         await message.answer(await getWeather(weatherSearch['search'][elemNumber], state),
                              reply_markup=futureWeatherInlineMarkup(),
                              disable_notification=True)
-        currentState = await getCurrentState(state)
         if currentState in ['setMainCity', 'selectMainCity']:
             user = User(message.from_user.id)
-            user.setMainCity(weatherSearch[elemNumber][1])
+            user.setMainCity(weatherSearch['search'][elemNumber][1])
             if currentState == 'selectMainCity':
                 await deleteMessages(message.message_id, message.chat.id, state)
                 await message.answer(f"{weatherSearch[elemNumber][0]} установлен как город по умолчанию\n"
@@ -124,11 +124,10 @@ async def selectCity(message: types.Message, state: FSMContext):
                 await state.reset_state()
                 return
             else:
-                await message.answer(f"{weatherSearch[elemNumber][0]} установлен как город по умолчанию",
+                await message.answer(f"{weatherSearch['search'][elemNumber][0]} установлен как город по умолчанию",
                                      reply_markup=settingsMarkup(user))
                 await SettingsState.settingsMenu.set()
     elif message.text == 'Искать еще 🔍':
-        await message.delete()
 
         await message.answer('Укажите населенный пункт 🏙️', reply_markup=locationMarkup(),
                              disable_notification=True)
