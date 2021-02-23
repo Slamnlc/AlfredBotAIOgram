@@ -26,18 +26,18 @@ async def weatherMenu(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(content_types='location', state=[
-    WeatherState.weatherMenu, SettingsState.setMainCity, FirstSettings.indicateMainCity
+    WeatherState.weatherMenu, SettingsState.setMainCity, SettingsState.searchMainCity, FirstSettings.indicateMainCity
 ])
 async def weatherByLocation(message: types.Message, state: FSMContext):
     await message.delete()
     cityList = getLocation(message.location)
     currentState = await getCurrentState(state)
     if cityList.__len__() == 1:
-        if currentState in ['setMainCity', 'indicateMainCity']:
+        if currentState in ['setMainCity', 'indicateMainCity', 'searchMainCity']:
             await message.answer(await getWeather(cityList[0]))
             user = User(message.from_user.id)
             user.setMainCity(cityList[0][1])
-            if currentState == 'setMainCity':
+            if currentState in ['setMainCity', 'searchMainCity']:
                 await message.answer(f"{cityList[0][0]} установлен как город по умолчанию",
                                      reply_markup=settingsMarkup(user))
                 await SettingsState.settingsMenu.set()
@@ -91,7 +91,7 @@ async def weatherBySearch(message: types.Message, state: FSMContext):
                                  cityList=weatherSearch,
                                  addSearch=currentState == 'weatherMenu'),
                              disable_notification=True)
-    await state.set_data(weatherSearch)
+    await state.update_data({'search': weatherSearch})
     if currentState == 'searchMainCity':
         await SettingsState.setMainCity.set()
     elif currentState == 'indicateMainCity':
@@ -107,9 +107,9 @@ async def selectCity(message: types.Message, state: FSMContext):
     await message.delete()
     if message.text.split('.')[0].isdigit():
         elemNumber = int(message.text.split('.')[0]) - 1
-        weatherSearch = await state.get_data()
-        await message.answer(await getWeather(weatherSearch[elemNumber]),
-                             # reply_markup=futureWeatherInlineMarkup(),
+        weatherSearch = await state.get_data('search')
+        await message.answer(await getWeather(weatherSearch['search'][elemNumber], state),
+                             reply_markup=futureWeatherInlineMarkup(),
                              disable_notification=True)
         currentState = await getCurrentState(state)
         if currentState in ['setMainCity', 'selectMainCity']:

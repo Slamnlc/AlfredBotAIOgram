@@ -47,7 +47,7 @@ async def showRate(message: types.Message, state: FSMContext):
         else:
             markup = mainCurrencyMarkup(user)
 
-        await message.answer(getReturnRate(currency, user.dayForShow), reply_markup=markup,
+        await message.answer(getReturnRate(currency, user.dayForShow -1), reply_markup=markup,
                              disable_notification=True)
 
 

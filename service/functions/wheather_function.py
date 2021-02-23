@@ -115,12 +115,24 @@ async def getWeather(cityElem, state: FSMContext = None):
                  f"Сейчас: {tempAtNow}. {weatherAtNow}. Чувствуется как {feel}"
 
     if not state is None:
-        await state.set_data(
-            {
-                'min': minTemp[1:],
-                'max': maxTemp[1:],
-                'type': weatherType[1:]
-            }
-        )
+        data = await state.get_data()
+        if 'search' in data:
+            search = data['search']
+        else:
+            search = []
+        data = {
+            'search': search,
+            'min': minTemp[1:],
+            'max': maxTemp[1:],
+            'type': weatherType[1:]
+        }
+        await state.set_data(data)
+        # await state(
+        #     {
+        #         'min': minTemp[1:],
+        #         'max': maxTemp[1:],
+        #         'type': weatherType[1:]
+        #     }
+        # )
 
     return addWeatherEmoji(whatReturn)
