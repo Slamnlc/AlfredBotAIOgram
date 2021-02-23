@@ -1,7 +1,7 @@
 FROM python:latest
 
 WORKDIR /src
-RUN mkdir /src/images
+RUN mkdir /images
 RUN apt-get update
 RUN apt-get -y install cron
 RUN apt-get install -y locales locales-all
