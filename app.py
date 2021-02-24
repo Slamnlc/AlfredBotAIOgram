@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from scripts.messages.sendMessages import startSchedule
 from utils.set_bot_commands import set_default_commands, clear_all_commands
@@ -12,6 +13,7 @@ async def on_startup(dp):
     await on_startup_notify(dp)
     await clear_all_commands(dp)
     await set_default_commands(dp)
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
     asyncio.create_task(startSchedule())
 
 

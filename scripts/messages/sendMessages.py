@@ -12,7 +12,6 @@ async def job():
     # now = datetime.now()
     # for admin in ADMINS:
     #     await dp.bot.send_message(admin, now.time())
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
     logging.info('Nu sho?')
 
 
