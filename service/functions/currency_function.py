@@ -13,11 +13,14 @@ from service.functions.logger import logger
 
 def getRate(currency, howMany):
     locale.setlocale(locale.LC_TIME, "ru_RU")
-    today = date.today() - timedelta(days=howMany)
+    mainDate = date.today() + timedelta(days=1)
+    if not loader.db.isExist('date', currency, f"'{mainDate}'"):
+        mainDate = date.today()
+    today = mainDate - timedelta(days=howMany)
     data = loader.db.getFromDB(currency, 'rate', f"date >= '{today}'", orderBy='ORDER BY DATE DESC')
     returnList = []
     for i in range(data.__len__()):
-        today = date.today() - timedelta(days=i)
+        today = mainDate - timedelta(days=i)
         # if not loader.db.isExist('date', currency, f"'{today}'"):
         #     addCurrencyInfo(i + 5)
 

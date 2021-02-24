@@ -15,7 +15,7 @@ async def start_showMainCurrency(message: types.Message):
     user = User(message.from_user.id)
     await message.delete()
     await message.answer(text='Для начала, укажите валюту, которая будет использована как основная в конверторе валют?',
-                         reply_markup=currencyMarkup(user))
+                         reply_markup=currencyMarkup(user, addUAH=True))
     await FirstSettings.showCurrency.set()
 
 

@@ -117,7 +117,7 @@ async def selectCity(message: types.Message, state: FSMContext):
             user.setMainCity(weatherSearch['search'][elemNumber][1])
             if currentState == 'selectMainCity':
                 await deleteMessages(message.message_id, message.chat.id, state)
-                await message.answer(f"{weatherSearch[elemNumber][0]} установлен как город по умолчанию\n"
+                await message.answer(f"{weatherSearch['search'][elemNumber][0]} установлен как город по умолчанию\n"
                                      f"Настройка закончена, спасибо 🤗",
                                      reply_markup=mainMarkup())
                 await sendKeanu(message.chat.id)

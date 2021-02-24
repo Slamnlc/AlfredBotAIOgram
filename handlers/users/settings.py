@@ -24,7 +24,7 @@ async def openSettingsMenu(message: types.Message):
 async def changeMainCurrency(message: types.Message):
     await message.delete()
     await message.answer('Выберите валюту, которая будет установлена по умолчанию в конвертере',
-                         reply_markup=currencyMarkup(user=User(message.from_user.id)))
+                         reply_markup=currencyMarkup(user=User(message.from_user.id), addUAH=True))
     await SettingsState.setMainCurrency.set()
 
 

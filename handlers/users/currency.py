@@ -48,7 +48,7 @@ async def showRate(message: types.Message, state: FSMContext):
                                 reply_markup=markup)
         os.remove(file)
     else:
-        await message.answer(getReturnRate(currency, user.dayForShow -1), reply_markup=markup,
+        await message.answer(getReturnRate(currency, user.dayForShow), reply_markup=markup,
                              disable_notification=True)
 
 

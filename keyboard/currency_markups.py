@@ -27,7 +27,7 @@ def mainCurrencyMarkup(user: User):
     return markup
 
 
-def currencyMarkup(user, inlineMode=False, addCheckBox=False, oneTimeKeyboard=False):
+def currencyMarkup(user, inlineMode=False, addCheckBox=False, oneTimeKeyboard=False, addUAH=False):
     data = db.getCurrencyList()
 
     if inlineMode:
@@ -49,7 +49,8 @@ def currencyMarkup(user, inlineMode=False, addCheckBox=False, oneTimeKeyboard=Fa
     else:
         markup = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=oneTimeKeyboard)
         markup.add(KeyboardButton('Назад ⬅'))
-        markup.add(f"UAH - {data['UAH']['Emoji']} Гривна")
+        if addUAH:
+            markup.add(f"UAH - {data['UAH']['Emoji']} Гривна")
         for curr in user.currencyPriority:
             if curr != 'UAH':
                 markup.add(KeyboardButton(f'{curr} - {data[curr]["Emoji"]} {data[curr]["FullName"]}'))

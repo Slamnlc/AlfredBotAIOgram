@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo timedatectl set-timezone Europe/Kiev
 sudo apt-get update
 git clone https://github.com/Slamnlc/AlfredBotAIOgram
 
@@ -17,8 +18,5 @@ sed -i 's/1437484062:AAFYAEQCs3T7723uIEX6lQOiJfjK0QhaXNc/1678753173:AAFph0Mx901N
 cd /home/ubuntu/AlfredBotAIOgram/
 sudo snap install docker
 sudo sudo docker-compose up --detach --build
-#sudo docker-compose exec -T db psql -U postgres -c 'create database alfredbot'
-#sudo docker-compose exec -T db psql -U postgres -c 'create database yaposhka'
 sudo docker-compose exec -T db psql -U postgres  -f /var/lib/postgresql/backup.sql
-#sudo docker-compose exec -T db psql -U postgres -d alfredbot -f /var/lib/postgresql/alfred.sql
 sudo sudo docker-compose up
