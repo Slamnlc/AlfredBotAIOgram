@@ -9,14 +9,15 @@ from service.functions.currency_function import addCurrencyInfo
 
 
 async def job():
-    now = datetime.now()
-    for admin in ADMINS:
-        await dp.bot.send_message(admin, now.time())
+    # now = datetime.now()
+    # for admin in ADMINS:
+    #     await dp.bot.send_message(admin, now.time())
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
     logging.info('Nu sho?')
 
 
 async def startSchedule():
-    # schedule.every(30).seconds.do(job)
+    schedule.every(10).seconds.do(job)
     schedule.every().day.at("18:00").do(addCurrencyInfo, 5)
     schedule.every().day.at("22:00").do(addCurrencyInfo, 5)
     schedule.every().day.at("06:00").do(addCurrencyInfo, 5)
