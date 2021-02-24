@@ -48,7 +48,7 @@ async def addCurrencyInfo(howMany, currency=None):
         url = f'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='
     else:
         url = f'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode={currency}&date='
-    today = date.today() + timedelta(days=1)
+    today = date.today() + timedelta(days=2)
     locale.setlocale(locale.LC_TIME, "ru_RU")
     newTables = ''
     for i in range(howMany):
