@@ -13,7 +13,7 @@ async def on_startup(dp):
     await on_startup_notify(dp)
     await clear_all_commands(dp)
     await set_default_commands(dp)
-
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
     asyncio.create_task(startSchedule())
 
 
@@ -21,5 +21,4 @@ if __name__ == '__main__':
     from aiogram import executor
     from handlers import dp
 
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
     executor.start_polling(dp, on_startup=on_startup)
