@@ -18,7 +18,7 @@ async def startSchedule():
     schedule.every().day.at("18:00").do(addCurrencyInfo, 5)
     schedule.every().day.at("22:00").do(addCurrencyInfo, 5)
     schedule.every().day.at("06:00").do(addCurrencyInfo, 5)
-    schedule.every().day.at("22:47").do(job)
+    schedule.every().day.at("22:49").do(addCurrencyInfo, 5)
     while True:
         await schedule.run_pending()
         await asyncio.sleep(1)
