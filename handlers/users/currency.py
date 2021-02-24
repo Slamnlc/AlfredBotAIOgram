@@ -27,6 +27,11 @@ async def showRate(message: types.Message, state: FSMContext):
     await message.delete()
     currency = message.text[:3].upper()
     user.addCurrencyUse(currency)
+    currState = await getCurrentState(state)
+    if currState == 'otherCurrency':
+        markup = currencyMarkup(user)
+    else:
+        markup = mainCurrencyMarkup(user)
     if currency == 'UAH':
         await message.answer("Это легко, 1 гривна как стоила 1 гривну, так и стоит 1 гривну 🙃",
                              disable_notification=True)
@@ -34,21 +39,15 @@ async def showRate(message: types.Message, state: FSMContext):
         file = drawDiagram(user.dayForShow, currency, user.id)
         await dp.bot.send_photo(message.chat.id, photo=open(file, 'rb'),
                                 caption=f'Курс {currency} за {user.dayForShow} дней',
-                                reply_markup=mainCurrencyMarkup(user))
+                                reply_markup=markup)
         os.remove(file)
     elif user.dayForShow > 62:
         file = drawHistogramm(user.dayForShow, currency, user.id)
         await dp.bot.send_photo(message.chat.id, open(file, 'rb'),
                                 f'Курс {currency} за {user.dayForShow} дней',
-                                reply_markup=mainCurrencyMarkup(user))
+                                reply_markup=markup)
         os.remove(file)
     else:
-        currState = await getCurrentState(state)
-        if currState == 'otherCurrency':
-            markup = currencyMarkup(user)
-        else:
-            markup = mainCurrencyMarkup(user)
-
         await message.answer(getReturnRate(currency, user.dayForShow -1), reply_markup=markup,
                              disable_notification=True)
 
