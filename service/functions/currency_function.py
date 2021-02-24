@@ -1,6 +1,5 @@
 import json
 import locale
-import logging
 import operator
 from datetime import date, timedelta
 
@@ -8,6 +7,8 @@ from aiogram import types
 
 import loader
 import requests
+
+from service.functions.logger import logger
 
 
 def getRate(currency, howMany):
@@ -44,7 +45,7 @@ def getReturnRate(currency, howMany):
 
 
 async def addCurrencyInfo(howMany, currency=None):
-    logging.info('Start updating currency rate')
+    logger.info('Start updating currency rate')
     if currency is None:
         url = f'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='
     else:
@@ -65,9 +66,9 @@ async def addCurrencyInfo(howMany, currency=None):
                     loader.db.update(curr['cc'], 'rate', curr['rate'], f"date='{today}'")
                 else:
                     loader.db.insert(curr['cc'], f"'{today}', {curr['rate']}")
-    logging.info('Currency rate are updated')
+    logger.info('Currency rate are updated')
     if newTables != '':
-        logging.info(f"List of created tables:{newTables}")
+        logger.info(f"List of created tables:{newTables}")
 
 
 def getIndicatedCurrency():

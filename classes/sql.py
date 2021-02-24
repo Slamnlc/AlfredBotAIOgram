@@ -1,9 +1,8 @@
 import json
-import logging
-
 import psycopg2
 
 from data.config import yaposhkaDbName, mainDbName, dbUserName, dbPassword, HOSTDB
+from service.functions.logger import logger
 from service.functions.currency_function import getIndicatedCurrency
 
 
@@ -27,7 +26,7 @@ class Database:
         self.cursor = self.connection.cursor()
         if HOSTDB == '127.0.0.1':
             self.cursor.execute("set LC_TIME = 'ru_RU.KOI8-R'")
-        logging.info("Connected to database")
+        logger.info("Connected to database")
 
     def getFromDB(self, tableName, what, where, join='', orderBy='', groupBy=''):
         self.cursor.execute(
@@ -53,9 +52,9 @@ class Database:
         quantity = headers.split(',').__len__()
         if values.split(',').__len__() == quantity:
             self.cursor.execute(f"INSERT INTO {tableName} ({headers}) VALUES ({values})")
-            logging.info(f"Data {values} successfully inserted to {tableName}")
+            logger.info(f"Data {values} successfully inserted to {tableName}")
         else:
-            logging.info(f"Total columns number ({quantity}) "
+            logger.info(f"Total columns number ({quantity}) "
                          f"aren't equal to inserted values ({values.split(',').__len__()})"
                          f"Data aren't inserted")
 
@@ -84,7 +83,7 @@ class Database:
     def createTable(self, tableName: str, header: str):
         self.cursor.execute(f"CREATE TABLE {tableName} ({header})")
         self.connection.commit()
-        logging.info(f"Table {tableName} was successfully created")
+        logger.info(f"Table {tableName} was successfully created")
 
     def getCurrencyList(self, onlyName=False):
         if onlyName:
@@ -110,7 +109,7 @@ class Database:
     def deleteUser(self, userID):
         self.cursor.execute(f"DELETE FROM USERS WHERE ID={userID}")
         self.connection.commit()
-        logging.info(f"User with id {userID} was deleted")
+        logger.info(f"User with id {userID} was deleted")
 
     def addUser(self, idUser, currency='UAH',
                 mainCurrency=['EUR', 'USD'], location='NULL', currencyPriority=None, dayForShow=10):
@@ -122,7 +121,7 @@ class Database:
         self.cursor.execute(query)
         self.connection.commit()
 
-        logging.info(f"User with ID {idUser} was created")
+        logger.info(f"User with ID {idUser} was created")
         data = {
             'id': idUser,
             'location': location,

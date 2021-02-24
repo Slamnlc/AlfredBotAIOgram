@@ -16,6 +16,7 @@ async def job():
 
 
 async def startSchedule():
+    logging.info('fff')
     schedule.every(10).seconds.do(job)
     schedule.every().day.at("18:00").do(addCurrencyInfo, 5)
     schedule.every().day.at("22:00").do(addCurrencyInfo, 5)
