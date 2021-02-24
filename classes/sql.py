@@ -56,8 +56,8 @@ class Database:
             logging.info(f"Data {values} successfully inserted to {tableName}")
         else:
             logging.info(f"Total columns number ({quantity}) "
-                  f"aren't equal to inserted values ({values.split(',').__len__()})"
-                  f"Data aren't inserted")
+                         f"aren't equal to inserted values ({values.split(',').__len__()})"
+                         f"Data aren't inserted")
 
     def update(self, tableName, what, how, condition):
         self.cursor.execute(f"UPDATE {tableName} SET {what} = {how} WHERE {condition}")
