@@ -1,5 +1,6 @@
 import json
 import locale
+import logging
 import operator
 from datetime import date, timedelta
 
@@ -43,7 +44,7 @@ def getReturnRate(currency, howMany):
 
 
 async def addCurrencyInfo(howMany, currency=None):
-    print('Start updating currency rate')
+    logging.info('Start updating currency rate')
     if currency is None:
         url = f'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='
     else:
@@ -64,9 +65,9 @@ async def addCurrencyInfo(howMany, currency=None):
                     loader.db.update(curr['cc'], 'rate', curr['rate'], f"date='{today}'")
                 else:
                     loader.db.insert(curr['cc'], f"'{today}', {curr['rate']}")
-    print('Currency rate are updated')
+    logging.info('Currency rate are updated')
     if newTables != '':
-        print(f"List of created tables:{newTables}")
+        logging.info(f"List of created tables:{newTables}")
 
 
 def getIndicatedCurrency():

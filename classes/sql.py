@@ -27,7 +27,7 @@ class Database:
         self.cursor = self.connection.cursor()
         if HOSTDB == '127.0.0.1':
             self.cursor.execute("set LC_TIME = 'ru_RU.KOI8-R'")
-        print("Connected to database")
+        logging.info("Connected to database")
 
     def getFromDB(self, tableName, what, where, join='', orderBy='', groupBy=''):
         self.cursor.execute(
@@ -55,7 +55,7 @@ class Database:
             self.cursor.execute(f"INSERT INTO {tableName} ({headers}) VALUES ({values})")
             logging.info(f"Data {values} successfully inserted to {tableName}")
         else:
-            print(f"Total columns number ({quantity}) "
+            logging.info(f"Total columns number ({quantity}) "
                   f"aren't equal to inserted values ({values.split(',').__len__()})"
                   f"Data aren't inserted")
 
@@ -84,7 +84,7 @@ class Database:
     def createTable(self, tableName: str, header: str):
         self.cursor.execute(f"CREATE TABLE {tableName} ({header})")
         self.connection.commit()
-        print(f"Table {tableName} was successfully created")
+        logging.info(f"Table {tableName} was successfully created")
 
     def getCurrencyList(self, onlyName=False):
         if onlyName:
