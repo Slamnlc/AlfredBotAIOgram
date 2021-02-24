@@ -16,8 +16,8 @@ def getRate(currency, howMany):
     returnList = []
     for i in range(data.__len__()):
         today = date.today() - timedelta(days=i)
-        if not loader.db.isExist('date', currency, f"'{today}'"):
-            addCurrencyInfo(i + 5)
+        # if not loader.db.isExist('date', currency, f"'{today}'"):
+        #     addCurrencyInfo(i + 5)
 
         if "{:.2f}".format(data[i][0]) == '0.00':
             returnList.append(today.strftime('%d.%m.%y (%a)') + ": " + "{:.4f}".format(data[i][0]))
@@ -42,7 +42,7 @@ def getReturnRate(currency, howMany):
            f"{rateList.__len__()} дней\n{st}"
 
 
-def addCurrencyInfo(howMany, currency=None):
+async def addCurrencyInfo(howMany, currency=None):
     print('Start updating currency rate')
     if currency is None:
         url = f'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='

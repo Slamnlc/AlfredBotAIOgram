@@ -1,19 +1,20 @@
 import aioschedule as schedule
 import asyncio
-import time
-
-# import data.config
 from loader import dp
+from data.config import ADMINS
+from service.functions.currency_function import addCurrencyInfo
 
 
 async def job():
-    # for admin in data.config.ADMINS:
-    await dp.bot.send_message(185200431, 'Ну шо? Я настроил')
+    for admin in ADMINS:
+        await dp.bot.send_message(admin, 'Ну шо? Я настроил')
 
 
-if __name__ == '__main__':
-    schedule.every(10).seconds.do(job)
-    loop = asyncio.get_event_loop()
-    while 1:
-        loop.run_until_complete(schedule.run_pending())
-        time.sleep(1)
+async def startSchedule():
+    # schedule.every(30).seconds.do(job)
+    schedule.every().day.at("18:00").do(addCurrencyInfo, 5)
+    schedule.every().day.at("22:00").do(addCurrencyInfo, 5)
+    schedule.every().day.at("06:00").do(addCurrencyInfo, 5)
+    while True:
+        await schedule.run_pending()
+        await asyncio.sleep(1)

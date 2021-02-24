@@ -1,4 +1,8 @@
+import asyncio
+
+from scripts.messages.sendMessages import startSchedule
 from utils.set_bot_commands import set_default_commands, clear_all_commands
+
 
 async def on_startup(dp):
     import filters
@@ -8,6 +12,7 @@ async def on_startup(dp):
     await on_startup_notify(dp)
     await clear_all_commands(dp)
     await set_default_commands(dp)
+    asyncio.create_task(startSchedule())
 
 
 if __name__ == '__main__':
