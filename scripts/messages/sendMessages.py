@@ -8,8 +8,8 @@ from service.functions.currency_function import addCurrencyInfo
 
 
 async def job():
-    # for admin in ADMINS:
-    #     await dp.bot.send_message(admin, 'Ну шо? Я настроил')
+    for admin in ADMINS:
+        await dp.bot.send_message(admin, 'Ну шо? Я настроил')
     logging.info('Nu sho?')
 
 
