@@ -53,7 +53,7 @@ class Database:
         quantity = headers.split(',').__len__()
         if values.split(',').__len__() == quantity:
             self.cursor.execute(f"INSERT INTO {tableName} ({headers}) VALUES ({values})")
-            print(f"Data {values} successfully inserted to {tableName}")
+            logging.info(f"Data {values} successfully inserted to {tableName}")
         else:
             print(f"Total columns number ({quantity}) "
                   f"aren't equal to inserted values ({values.split(',').__len__()})"
