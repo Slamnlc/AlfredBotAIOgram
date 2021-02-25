@@ -5,9 +5,9 @@ git clone https://github.com/Slamnlc/AlfredBotAIOgram
 
 mv /home/ubuntu/config.py /home/ubuntu/AlfredBotAIOgram/data/
 sudo mv /home/ubuntu/backup.sql /home/ubuntu/AlfredBotAIOgram/
-#sudo mv /home/ubuntu/alfred.sql /home/ubuntu/AlfredBotAIOgram/
 sudo mv /home/ubuntu/.env /home/ubuntu/AlfredBotAIOgram/
 sudo mv /home/ubuntu/makeBackUp.sh /home/ubuntu/AlfredBotAIOgram/scripts/
+sudo chmod 0644 /home/ubuntu/AlfredBotAIOgram/scripts/makeBackUp.sh
 
 sed -i 's/127.0.0.1/db/g' /home/ubuntu/AlfredBotAIOgram/data/config.py
 sed -i 's/\/Users\/maksim\/CurrencyBot\/images/\/images/g' /home/ubuntu/AlfredBotAIOgram/data/config.py
