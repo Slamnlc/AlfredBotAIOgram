@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 
 import aioschedule as schedule
 import asyncio
@@ -22,6 +22,8 @@ async def sendMainInfo():
             if not user[2] is None:
                 data = db.getCurrencyList()
                 for currency in user[2][0]:
+                    if db.getFromDB(currency, 'rate', f"date='{date.today()}'").__len__() == 0:
+                        await addCurrencyInfo(5)
                     rate += f"{data[currency]['FullName']} {data[currency]['Emoji']}: {getTodayRate(currency)}\n"
             else:
                 rate = ''
