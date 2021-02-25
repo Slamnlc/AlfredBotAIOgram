@@ -18,6 +18,7 @@ class User:
         self.currencyPriority = data['currencyPriority']
         self.userCurrency = data['mainCurrency']
         self.dayForShow = data['dayForShow']
+        self.notify = data['notify']
 
     def getUsedCurrency(self):
         data = db.getCurrencyList()
@@ -66,3 +67,11 @@ class User:
         for currency in self.userCurrency:
             data[currency] = 2
         return data
+
+    def setNotificetionTime(self, time: str):
+        db.update('users', 'notify', f"'{time}'", f"id={self.id}")
+        self.notify = time
+
+    def deleteNotification(self):
+        db.update('users','notify', 'NULL', f"id={self.id}")
+        self.notify = None

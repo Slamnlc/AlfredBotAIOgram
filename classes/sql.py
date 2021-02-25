@@ -55,8 +55,8 @@ class Database:
             logger.info(f"Data {values} successfully inserted to {tableName}")
         else:
             logger.info(f"Total columns number ({quantity}) "
-                         f"aren't equal to inserted values ({values.split(',').__len__()})"
-                         f"Data aren't inserted")
+                        f"aren't equal to inserted values ({values.split(',').__len__()})"
+                        f"Data aren't inserted")
 
     def update(self, tableName, what, how, condition):
         self.cursor.execute(f"UPDATE {tableName} SET {what} = {how} WHERE {condition}")
@@ -112,16 +112,20 @@ class Database:
         logger.info(f"User with id {userID} was deleted")
 
     def addUser(self, idUser, currency='UAH',
-                mainCurrency=['EUR', 'USD'], location='NULL', currencyPriority=None, dayForShow=10):
+                mainCurrency=['EUR', 'USD'], location='NULL', currencyPriority=None, dayForShow=10, notify=None):
         if currencyPriority is None:
             currencyPriority = getIndicatedCurrency()
+        if notify is None:
+            notify = 'null'
         query = f"INSERT INTO USERS (ID, LOCATION, CURRENCY, CURRENCYPRIORITY, MAINCURRENCY, " \
-                f"DAYFORSHOW) VALUES ({idUser}, {location}, '{currency}', " \
-                f"'{json.dumps(currencyPriority)}'::json, ARRAY[{mainCurrency}],{dayForShow})"
+                f"DAYFORSHOW, NOTIFY) VALUES ({idUser}, {location}, '{currency}', " \
+                f"'{json.dumps(currencyPriority)}'::json, ARRAY[{mainCurrency}],{dayForShow}, {notify})"
         self.cursor.execute(query)
         self.connection.commit()
 
         logger.info(f"User with ID {idUser} was created")
+        if notify != 'null':
+            notify = f"{notify.hour}:{notify.minute}"
         data = {
             'id': idUser,
             'location': location,
@@ -129,5 +133,6 @@ class Database:
             'currencyPriority': currencyPriority,
             'mainCurrency': mainCurrency,
             'dayForShow': dayForShow,
+            'notify': notify
         }
         return data

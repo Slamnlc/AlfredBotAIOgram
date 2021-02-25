@@ -1,3 +1,4 @@
+from .general_inline import dp
 from .converter import dp
 from .currency_list import dp
 from .weather_inline import dp

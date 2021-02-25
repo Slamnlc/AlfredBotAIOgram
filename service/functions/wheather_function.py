@@ -108,7 +108,7 @@ async def getWeather(cityElem, state: FSMContext = None):
     minTemp[0] = replaceNumberToEmoji(minTemp[0])
     maxTemp[0] = replaceNumberToEmoji(maxTemp[0])
 
-    whatReturn = f"Погода в {cityElem[0]}🏙️\n{date.today().strftime('%d %B')}\n" \
+    whatReturn = f"Погода в {cityElem[0].title()}🏙️\n{date.today().strftime('%d %B')}\n" \
                  f"Мин.: {minTemp[0]} Макс.: {maxTemp[0]}\n" \
                  f"{weatherType[0]} \n" \
                  f"Восход 🌅: {dayLight[0]}. Заход 🌇: {dayLight[1]}\n\n" \

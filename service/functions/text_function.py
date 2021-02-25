@@ -24,6 +24,10 @@ def convertToUser(st):
         mainCurrency = None
     else:
         mainCurrency = st[4][0]
+    if not st[6] is None:
+        notify = f"{st[6].hour}:{st[6].minute}"
+    else:
+        notify = None
     user = {
         'id': st[0],
         'location': st[1],
@@ -31,6 +35,7 @@ def convertToUser(st):
         'currencyPriority': st[3],
         'mainCurrency': mainCurrency,
         'dayForShow': st[5],
+        'notify': notify
     }
     return user
 
@@ -48,6 +53,12 @@ def convertToAdd(elem):
 def replaceList(strToReplace, oldText, newText):
     for i in range(oldText.__len__()):
         strToReplace = strToReplace.replace(oldText[i], newText[i])
+    return strToReplace
+
+
+def replaceListOne(strToReplace, oldText, newText):
+    for i in range(oldText.__len__()):
+        strToReplace = strToReplace.replace(oldText[i], newText)
     return strToReplace
 
 

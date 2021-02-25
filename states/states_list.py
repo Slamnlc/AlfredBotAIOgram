@@ -27,6 +27,7 @@ class SettingsState(StatesGroup):
     setMainCurrency = State()
     setDayForShow = State()
     setCurrencyList = State()
+    setNotifyTime = State()
 
 
 class WeatherState(StatesGroup):

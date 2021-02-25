@@ -26,6 +26,13 @@ def mainMarkup():
     return markup
 
 
+def backOnButton():
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardMarkup(text='Назад ⬅', callback_data='backButton'))
+
+    return markup
+
+
 def settingsMarkup(user: User):
     data = db.getCurrencyList()
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
@@ -43,6 +50,13 @@ def settingsMarkup(user: User):
     markup.add(mainCity)
     markup.add(dayForShow)
     markup.add(currencyList)
+
+    if user.notify is None:
+        markup.add(types.KeyboardButton('Указать время для отправки уведомлений'))
+    else:
+        markup.add(types.KeyboardButton(f"Время уведомлений: {user.notify}"),
+                   types.KeyboardButton('Отключить уведомления'))
+
     if user.id in ADMINS:
         markup.add(types.KeyboardButton(f'Количетсво уникальных пользователей - '
                                         f'{getUsersMarkup(db, returnNumber=True)}'))

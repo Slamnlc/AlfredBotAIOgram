@@ -27,3 +27,11 @@ class IsFlib(BoundFilter):
             return True
         else:
             return False
+
+
+class IsBack(BoundFilter):
+    async def check(self, callback_data: dict):
+        if callback_data.data == 'backButton':
+            return True
+        else:
+            return False

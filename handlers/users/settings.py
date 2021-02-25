@@ -1,12 +1,14 @@
+from datetime import datetime
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from classes.User import User
 from filters import IsCurrency
 from keyboard.currency_markups import currencyMarkup
-from keyboard.markup import settingsMarkup, locationMarkup
+from keyboard.markup import settingsMarkup, locationMarkup, backOnButton
 from loader import dp
-from service.functions.text_function import getFlag, getCurrentState
+from service.functions.text_function import getFlag, getCurrentState, replaceListOne
 from states import SettingsState
 from states.states_list import FirstSettings
 
@@ -96,3 +98,45 @@ async def changeMainCity(message: types.Message):
     await message.delete()
     await message.answer('Напишите название города или отправте местоположение', reply_markup=locationMarkup())
     await SettingsState.searchMainCity.set()
+
+
+@dp.message_handler(content_types='text', state=SettingsState.settingsMenu, text='Отключить уведомления')
+async def deleteNotification(message: types.Message):
+    user = User(message.from_user.id)
+    user.deleteNotification()
+    await message.delete()
+    await message.answer('Уведомления отключены 😢', reply_markup=settingsMarkup(user))
+
+
+@dp.message_handler(content_types='text', state=SettingsState.settingsMenu, regexp='уведомлений')
+async def setNotificationTime(message: types.Message):
+    await message.delete()
+    await message.answer('Во сколько вы хотите получать уведомления о погоде '
+                         '(должен быть указан населенный пункт по умолчанию) и о курсе валют?\n'
+                         'Укажите в формате 00:00 (сперва час, затем минуты)',
+                         reply_markup=backOnButton())
+
+    await SettingsState.setNotifyTime.set()
+
+
+@dp.message_handler(content_types='text', state=SettingsState.setNotifyTime)
+async def selectNotificationTime(message: types.Message):
+    txt = replaceListOne(message.text.strip(), ['.', ',', '/', '-', ';'], ':')
+    await message.delete()
+    sp = txt.split(':')
+    if sp.__len__() == 2:
+        if -1 < int(sp[0]) < 25 and -1 < int(sp[1]) < 61:
+            if -1 < int(sp[1]) < 61:
+                user = User(message.from_user.id)
+                txt = datetime.strptime(txt, '%H:%M').strftime('%H:%M')
+                user.setNotificetionTime(txt)
+                await message.answer(f'Буду высылать уведомления в {txt} ⏰', reply_markup=settingsMarkup(user))
+                await SettingsState.settingsMenu.set()
+            else:
+                await message.answer('Я не знаю столько минут 🙃')
+        else:
+            await message.answer('Я не знаю столько часов 🙃')
+    elif sp.__len__() <= 1:
+        await message.answer('Слишком маленькое значение 😟')
+    else:
+        await message.answer('Слишком большое значение 😟')
