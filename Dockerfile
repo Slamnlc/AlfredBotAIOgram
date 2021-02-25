@@ -1,7 +1,6 @@
 FROM python:latest
 
 WORKDIR /src
-RUN apk add --no-cache tzdata
 ENV TZ Europe/Kiev
 RUN mkdir /images
 RUN apt-get update
