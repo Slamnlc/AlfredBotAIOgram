@@ -1,7 +1,8 @@
 FROM python:latest
 
 WORKDIR /src
-RUN -e TZ=Europe/Kiev
+RUN apk add --no-cache tzdata
+ENV TZ Europe/Kiev
 RUN mkdir /images
 RUN apt-get update
 RUN apt-get -y install cron
