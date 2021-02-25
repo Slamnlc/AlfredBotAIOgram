@@ -1,10 +1,10 @@
 FROM python:latest
 
 WORKDIR /src
+RUN -e TZ=Europe/Kiev
 RUN mkdir /images
 RUN apt-get update
 RUN apt-get -y install cron
-RUN timedatectl set-timezone Europe/Kiev
 RUN apt-get install -y locales locales-all
 RUN update-locale LANG=ru_RU.UTF-8
 ENV LC_ALL ru_RU.UTF-8
