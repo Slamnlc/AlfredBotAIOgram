@@ -23,7 +23,7 @@ async def sendMainInfo():
                 data = db.getCurrencyList()
                 for currency in user[2][0]:
                     if db.getFromDB(currency, 'rate', f"date='{date.today()}'").__len__() == 0:
-                        await addCurrencyInfo(5)
+                        await addCurrencyInfo(100)
                     rate += f"{data[currency]['FullName']} {data[currency]['Emoji']}: {getTodayRate(currency)}\n"
             else:
                 rate = ''
@@ -50,9 +50,9 @@ async def sendMainInfo():
 
 async def startSchedule():
     schedule.every(1).minute.do(sendMainInfo)
-    schedule.every().day.at("18:00").do(addCurrencyInfo, 5)
-    schedule.every().day.at("22:00").do(addCurrencyInfo, 5)
-    schedule.every().day.at("06:00").do(addCurrencyInfo, 5)
+    schedule.every().day.at("18:00").do(addCurrencyInfo, 10)
+    schedule.every().day.at("22:00").do(addCurrencyInfo, 10)
+    schedule.every().day.at("06:00").do(addCurrencyInfo, 50)
     while True:
         await schedule.run_pending()
         await asyncio.sleep(1)
