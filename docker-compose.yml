@@ -10,8 +10,6 @@ services:
     environment:
       - POSTGRES_PASSWORD=$PGPASS
       - POSTGRES_USER=$PGUSER
-      - TZ=GMT+2
-      - PGTZ=GMT+2
     restart: always
     ports:
       - 5432:5432
